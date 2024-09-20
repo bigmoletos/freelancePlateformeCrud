@@ -8,16 +8,22 @@ from collections import Counter
 from prettytable import PrettyTable
 import json
 import logging
-from pyresparser import ResumeParser
+# from pyresparser import ResumeParser
 import spacy
 # import en_core_web_sm
 import fr_core_news_md
 
 # Configuration du logging
 logging.basicConfig(level=logging.DEBUG,
-                    format='%(asctime)s - %(levelname)s - %(message)s')
+                    format='%(asctime)s - %(levelname)s - %(message)s',
+                    encoding='utf-8')
 logger = logging.getLogger(__name__)
 
+import sys
+import io
+
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
+sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8')
 
 class GestionProfil:
 
@@ -46,17 +52,43 @@ class GestionProfil:
         """
         logger.info(f"Extraction du CV depuis {self.cv_path}")
         try:
-            data = ResumeParser(self.cv_path,
-                                custom_nlp=self.nlp).get_extracted_data()
+            with open(self.cv_path, 'r', encoding='utf-8') as file:
+                texte_cv = file.read()
 
-            self.profil['nom'] = data.get('name', '').split()[-1] if data.get('name') else ''
-            self.profil['prenom'] = data.get('name', '').split()[0] if data.get('name') else ''
-            self.profil['email'] = data.get('email', '')
-            self.profil['telephone'] = data.get('mobile_number', '')
-            self.profil['competences'] = data.get('skills', [])
-            self.profil['experience'] = data.get('experience', [])
-            self.profil['formation'] = data.get('education', [])
-            self.profil['titre'] = data.get('designation', '')
+            doc = self.nlp(texte_cv)
+
+            # Extraction des informations basiques
+            self.profil['nom'] = ''
+            self.profil['prenom'] = ''
+            self.profil['email'] = ''
+            self.profil['telephone'] = ''
+            self.profil['competences'] = []
+            self.profil['experience'] = []
+            self.profil['formation'] = []
+            self.profil['titre'] = ''
+
+            # Extraction des entités nommées
+            for ent in doc.ents:
+                if ent.label_ == 'PER':
+                    noms = ent.text.split()
+                    if len(noms) > 1:
+                        self.profil['prenom'] = noms[0]
+                        self.profil['nom'] = ' '.join(noms[1:])
+                elif ent.label_ == 'EMAIL':
+                    self.profil['email'] = ent.text
+                elif ent.label_ == 'PHONE':
+                    self.profil['telephone'] = ent.text
+
+            # Extraction des compétences (à adapter selon votre CV)
+            self.profil['competences'] = [
+                token.text for token in doc
+                if token.pos_ == 'NOUN' and token.is_alpha
+            ]
+
+            # Extraction du titre (première ligne non vide du CV)
+            self.profil['titre'] = next(
+                (line.strip()
+                 for line in texte_cv.split('\n') if line.strip()), '')
 
             logger.info("Informations extraites du CV avec succès")
             logger.debug(f"Profil extrait : {self.profil}")
