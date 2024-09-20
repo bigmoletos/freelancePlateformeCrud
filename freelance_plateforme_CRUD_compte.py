@@ -1,205 +1,169 @@
-import requests
-import json
+import os
+from typing import Dict, List, Optional
+from dotenv import load_dotenv
 import PyPDF2
-import docx
 import re
-from datetime import datetime
-from selenium import webdriver
-from bs4 import BeautifulSoup
+import requests
+
 
 class GestionProfil:
-    def __init__(self):
-        self.plateformes = {
-            'Upwork': 'https://developers.upwork.com',
-            'Freelancer': 'https://developers.freelancer.com',
-            'Fiverr': None,  # Pas d'API publique
-            'Toptal': None,  # Pas d'API publique
-            'PeoplePerHour': None,  # Pas d'API publique
-            'Guru': 'https://www.guru.com/api',
-            'Kolabtree': None,  # Pas d'API publique
-            'AngelList': 'https://angel.co/api',
-            'LinkedIn': 'https://api.linkedin.com/v2',
-            'Dice': 'https://www.dice.com/api'
-        self.profil = {}
-        self.driver = webdriver.Chrome()  # Pour le scraping
 
-    def extraire_cv(self, chemin_fichier):
-        # Le code pour extraire les données du CV reste inchangé
-        # ...
+    def __init__(self) -> None:
+        """
+        Initialise la classe GestionProfil.
 
-    def creer_comptes(self):
-        for plateforme, url in self.plateformes.items():
-            if url:
-                try:
-                    if plateforme == 'Upwork':
-                        self.creer_compte_upwork()
-                    elif plateforme == 'Freelancer':
-                        self.creer_compte_freelancer()
-                    elif plateforme == 'Guru':
-                        self.creer_compte_guru()
-                    elif plateforme == 'AngelList':
-                        self.creer_compte_angellist()
-                    elif plateforme == 'LinkedIn':
-                        self.creer_compte_linkedin()
-                    elif plateforme == 'Dice':
-                        self.creer_compte_dice()
-                    print(f"Compte créé sur {plateforme}")
-                except Exception as e:
-                    print(f"Échec de la création du compte sur {plateforme}: {str(e)}")
+        Charge les variables d'environnement, initialise le profil et extrait les données du CV.
+        """
+        load_dotenv()
+        self.email: str = os.getenv('FREELANCE_EMAIL', '')
+        self.password: str = os.getenv('FREELANCE_PASSWORD', '')
+        self.profil: Dict[str, Any] = {}
+        self.cv_path: str = "data/cv.pdf"
+        self.extraire_cv()
+
+    def extraire_cv(self) -> None:
+        """
+        Extrait les informations du CV et les stocke dans self.profil.
+
+        Raises:
+            Exception: Si une erreur survient lors de l'extraction du CV.
+        """
+        try:
+            with open(self.cv_path, 'rb') as file:
+                reader = PyPDF2.PdfReader(file)
+                text = ""
+                for page in reader.pages:
+                    text += page.extract_text()
+
+            self.profil['nom'] = self.extraire_info(text, r"Nom:\s*(.+)")
+            self.profil['prenom'] = self.extraire_info(text, r"Prénom:\s*(.+)")
+            self.profil['titre'] = self.extraire_info(text, r"Titre:\s*(.+)")
+            self.profil['competences'] = self.extraire_liste(
+                text, r"Compétences:\s*(.+)")
+            self.profil['experience'] = self.extraire_experience(text)
+            self.profil['formation'] = self.extraire_formation(text)
+
+            print("Informations extraites du CV avec succès")
+        except Exception as e:
+            print(f"Erreur lors de l'extraction du CV : {e}")
+
+    def extraire_info(self, text: str, pattern: str) -> str:
+        """
+        Extrait une information spécifique du texte en utilisant une expression régulière.
+
+        Args:
+            text (str): Le texte à analyser.
+            pattern (str): L'expression régulière pour extraire l'information.
+
+        Returns:
+            str: L'information extraite ou une chaîne vide si non trouvée.
+
+        >>> gp = GestionProfil()
+        >>> gp.extraire_info("Nom: Dupont", r"Nom:\s*(.+)")
+        'Dupont'
+        >>> gp.extraire_info("Aucun nom", r"Nom:\s*(.+)")
+        ''
+        """
+        match = re.search(pattern, text)
+        return match.group(1) if match else ""
+
+    def extraire_liste(self, text: str, pattern: str) -> List[str]:
+        """
+        Extrait une liste d'éléments du texte en utilisant une expression régulière.
+
+        Args:
+            text (str): Le texte à analyser.
+            pattern (str): L'expression régulière pour extraire la liste.
+
+        Returns:
+            List[str]: La liste des éléments extraits.
+
+        >>> gp = GestionProfil()
+        >>> gp.extraire_liste("Compétences: Python, Java, C++", r"Compétences:\s*(.+)")
+        ['Python', 'Java', 'C++']
+        >>> gp.extraire_liste("Aucune compétence", r"Compétences:\s*(.+)")
+        []
+        """
+        match = re.search(pattern, text)
+        if match:
+            return [item.strip() for item in match.group(1).split(',')]
+        return []
+
+    def creer_compte_upwork(self) -> None:
+        """
+        Crée un compte sur Upwork en utilisant les informations du profil.
+
+        Raises:
+            requests.exceptions.RequestException: Si une erreur survient lors de la requête HTTP.
+        """
+        url = "https://www.upwork.com/signup/"
+        data = {
+            "email": self.email,
+            "password": self.password,
+            "firstName": self.profil['prenom'],
+            "lastName": self.profil['nom'],
+            "title": self.profil['titre'],
+            "skills": ", ".join(self.profil['competences'])
+        }
+        try:
+            response = requests.post(url, data=data)
+            if response.status_code == 200:
+                print("Compte Upwork créé avec succès")
             else:
-                print(f"Pas d'API disponible pour {plateforme}, création de compte manuelle nécessaire")
+                print(
+                    f"Échec de la création du compte Upwork. Code d'erreur : {response.status_code}"
+                )
+        except requests.exceptions.RequestException as e:
+            print(f"Erreur lors de la création du compte Upwork : {e}")
 
-    def miseAjourProfil(self):
-        for plateforme, url in self.plateformes.items():
-            if url:
-                try:
-                    if plateforme == 'Upwork':
-                        self.maj_profil_upwork()
-                    elif plateforme == 'Freelancer':
-                        self.maj_profil_freelancer()
-                    elif plateforme == 'Guru':
-                        self.maj_profil_guru()
-                    elif plateforme == 'AngelList':
-                        self.maj_profil_angellist()
-                    elif plateforme == 'LinkedIn':
-                        self.maj_profil_linkedin()
-                    elif plateforme == 'Dice':
-                        self.maj_profil_dice()
-                    print(f"Profil mis à jour sur {plateforme}")
-                except Exception as e:
-                    print(f"Échec de la mise à jour du profil sur {plateforme}: {str(e)}")
+    def maj_profil_linkedin(self) -> None:
+        """
+        Met à jour le profil LinkedIn avec les informations du profil local.
+
+        Raises:
+            requests.exceptions.RequestException: Si une erreur survient lors de la requête HTTP.
+        """
+        url = "https://api.linkedin.com/v2/people/(id:{profile_id})"
+        headers = {
+            "Authorization": f"Bearer {self.linkedin_token}",
+            "Content-Type": "application/json"
+        }
+        data = {
+            "firstName": {
+                "localized": {
+                    "fr_FR": self.profil['prenom']
+                }
+            },
+            "lastName": {
+                "localized": {
+                    "fr_FR": self.profil['nom']
+                }
+            },
+            "headline": {
+                "localized": {
+                    "fr_FR": self.profil['titre']
+                }
+            }
+        }
+        try:
+            response = requests.patch(url, headers=headers, json=data)
+            if response.status_code == 200:
+                print("Profil LinkedIn mis à jour avec succès")
             else:
-                print(f"Pas d'API disponible pour {plateforme}, mise à jour manuelle nécessaire")
+                print(
+                    f"Échec de la mise à jour du profil LinkedIn. Code d'erreur : {response.status_code}"
+                )
+        except requests.exceptions.RequestException as e:
+            print(f"Erreur lors de la mise à jour du profil LinkedIn : {e}")
 
-    def obtenir_statistiques(self):
-        statistiques = {}
-        for plateforme, url in self.plateformes.items():
-            if url:
-                try:
-                    if plateforme == 'Upwork':
-                        statistiques[plateforme] = self.stats_upwork()
-                    elif plateforme == 'Freelancer':
-                        statistiques[plateforme] = self.stats_freelancer()
-                    elif plateforme == 'Guru':
-                        statistiques[plateforme] = self.stats_guru()
-                    elif plateforme == 'AngelList':
-                        statistiques[plateforme] = self.stats_angellist()
-                    elif plateforme == 'LinkedIn':
-                        statistiques[plateforme] = self.stats_linkedin()
-                    elif plateforme == 'Dice':
-                        statistiques[plateforme] = self.stats_dice()
-                except Exception as e:
-                    print(f"Échec de l'obtention des statistiques sur {plateforme}: {str(e)}")
-            else:
-                print(f"Pas d'API disponible pour {plateforme}, statistiques non disponibles")
-
-        return statistiques
-
-    # Méthodes spécifiques pour chaque plateforme
-    def creer_compte_upwork(self):
-        # Implémentation spécifique pour Upwork
-        pass
-
-    def creer_compte_freelancer(self):
-        # Implémentation spécifique pour Freelancer
-        pass
-
-    def creer_compte_guru(self):
-        # Implémentation spécifique pour Guru
-        pass
-
-    def creer_compte_angellist(self):
-        # Implémentation spécifique pour AngelList
-        pass
-
-    def creer_compte_linkedin(self):
-        # Implémentation spécifique pour LinkedIn
-        pass
-
-    def creer_compte_dice(self):
-        # Implémentation spécifique pour Dice
-        pass
-
-    def maj_profil_upwork(self):
-        # Implémentation spécifique pour Upwork
-        pass
-
-    def maj_profil_freelancer(self):
-        # Implémentation spécifique pour Freelancer
-        pass
-
-    def maj_profil_guru(self):
-        # Implémentation spécifique pour Guru
-        pass
-
-    def maj_profil_angellist(self):
-        # Implémentation spécifique pour AngelList
-        pass
-
-    def maj_profil_linkedin(self):
-        # Implémentation spécifique pour LinkedIn
-        pass
-
-    def maj_profil_dice(self):
-        # Implémentation spécifique pour Dice
-        pass
-
-    def stats_upwork(self):
-        # Implémentation spécifique pour Upwork
-        pass
-
-    def stats_freelancer(self):
-        # Implémentation spécifique pour Freelancer
-        pass
-
-    def stats_guru(self):
-        # Implémentation spécifique pour Guru
-        pass
-
-    def stats_angellist(self):
-        # Implémentation spécifique pour AngelList
-        pass
-
-    def stats_linkedin(self):
-        # Implémentation spécifique pour LinkedIn
-        pass
-
-    def stats_dice(self):
-        # Implémentation spécifique pour Dice
-        pass
-
-    def scrape_fiverr(self):
-        # Implémentation du scraping pour Fiverr
-        pass
-
-    def scrape_toptal(self):
-        # Implémentation du scraping pour Toptal
-        pass
-
-    def scrape_peopleperhour(self):
-        # Implémentation du scraping pour PeoplePerHour
-        pass
-
-    def scrape_kolabtree(self):
-        # Implémentation du scraping pour Kolabtree
-        pass
-
-    def afficher_statistiques(self, statistiques):
-        # Le code pour afficher les statistiques reste inchangé
-        # ...
 
 if __name__ == "__main__":
+    import doctest
+    doctest.testmod()
+
     gestionnaire = GestionProfil()
+    print("Profil extrait du CV :")
+    print(json.dumps(gestionnaire.profil, indent=2, ensure_ascii=False))
 
-    # Extraction des données du CV
-    gestionnaire.extraire_cv("mon_cv.pdf")
-
-    # Création des comptes
-    gestionnaire.creer_comptes()
-
-    # Mise à jour du profil
-    gestionnaire.miseAjourProfil()
-
-    # Obtention et affichage des statistiques
-    stats = gestionnaire.obtenir_statistiques()
-    gestionnaire.afficher_statistiques(stats)
+    gestionnaire.creer_compte_upwork()
+    gestionnaire.maj_profil_linkedin()
