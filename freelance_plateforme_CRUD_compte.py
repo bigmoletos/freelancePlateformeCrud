@@ -1,13 +1,16 @@
 import os
-from typing import Dict, List, Optional, Any
+from typing import Dict, List, Any
 from dotenv import load_dotenv
-import PyPDF2
-import re
-import requests
-from collections import Counter
-from prettytable import PrettyTable
-import json
+# import PyPDF2
+# import re
+# import requests
+# from collections import Counter
+# from prettytable import PrettyTable
+# import json
 import logging
+from pyresparser import ResumeParser
+import spacy
+import en_core_web_sm
 
 # Configuration du logging
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -18,14 +21,15 @@ class GestionProfil:
         """
         Initialise la classe GestionProfil.
 
-        Charge les variables d'environnement, initialise le profil et extrait les données du CV.
+        Charge les variables d'environnement et initialise le profil.
         """
         logger.info("Initialisation de GestionProfil")
         load_dotenv()
         self.email: str = os.getenv('FREELANCE_EMAIL', '')
         self.password: str = os.getenv('FREELANCE_PASSWORD', '')
         self.profil: Dict[str, Any] = {}
-        self.cv_path: str = "data/cv.pdf"
+        # self.cv_path: str = "data/cv.pdf"
+        self.cv_path: str = "data/cv.txt"
         try:
             self.extraire_cv()
         except Exception as e:
@@ -37,68 +41,22 @@ class GestionProfil:
         """
         logger.info(f"Extraction du CV depuis {self.cv_path}")
         try:
-            with open(self.cv_path, 'rb') as file:
-                reader = PyPDF2.PdfReader(file)
-                text = ""
-                for page in reader.pages:
-                    text += page.extract_text()
+            data = ResumeParser(self.cv_path).get_extracted_data()
 
-            logger.debug("Extraction des informations du CV")
-            self.profil['nom'] = self.extraire_info(text, r"Nom:\s*(.+)")
-            self.profil['prenom'] = self.extraire_info(text, r"Prénom:\s*(.+)")
-            self.profil['titre'] = self.extraire_info(text, r"Titre:\s*(.+)")
-            self.profil['competences'] = self.extraire_liste(text, r"Compétences:\s*(.+)")
-            self.profil['experience'] = self.extraire_experience(text)
-            self.profil['formation'] = self.extraire_formation(text)
+            self.profil['nom'] = data.get('name', '').split()[-1] if data.get('name') else ''
+            self.profil['prenom'] = data.get('name', '').split()[0] if data.get('name') else ''
+            self.profil['email'] = data.get('email', '')
+            self.profil['telephone'] = data.get('mobile_number', '')
+            self.profil['competences'] = data.get('skills', [])
+            self.profil['experience'] = data.get('experience', [])
+            self.profil['formation'] = data.get('education', [])
+            self.profil['titre'] = data.get('designation', '')
 
             logger.info("Informations extraites du CV avec succès")
             logger.debug(f"Profil extrait : {self.profil}")
         except Exception as e:
             logger.error(f"Erreur lors de l'extraction du CV : {e}")
             raise
-
-    def extraire_info(self, text: str, pattern: str) -> str:
-        """
-        Extrait une information spécifique du texte en utilisant une expression régulière.
-        """
-        logger.debug(f"Extraction d'info avec pattern : {pattern}")
-        match = re.search(pattern, text)
-        result = match.group(1) if match else ""
-        logger.debug(f"Résultat de l'extraction : {result}")
-        return result
-
-    def extraire_liste(self, text: str, pattern: str) -> List[str]:
-        """
-        Extrait une liste d'éléments du texte en utilisant une expression régulière.
-        """
-        logger.debug(f"Extraction de liste avec pattern : {pattern}")
-        match = re.search(pattern, text)
-        if match:
-            result = [item.strip() for item in match.group(1).split(',')]
-            logger.debug(f"Liste extraite : {result}")
-            return result
-        logger.debug("Aucune liste extraite")
-        return []
-
-    def extraire_experience(self, text: str) -> List[str]:
-        """
-        Extrait les expériences professionnelles du texte.
-        """
-        logger.debug("Extraction des expériences")
-        experiences = re.findall(r"Expérience:\s*(.+?)(?=\n\n|\Z)", text, re.DOTALL)
-        result = [exp.strip() for exp in experiences]
-        logger.debug(f"Expériences extraites : {result}")
-        return result
-
-    def extraire_formation(self, text: str) -> List[str]:
-        """
-        Extrait les formations du texte.
-        """
-        logger.debug("Extraction des formations")
-        formations = re.findall(r"Formation:\s*(.+?)(?=\n\n|\Z)", text, re.DOTALL)
-        result = [form.strip() for form in formations]
-        logger.debug(f"Formations extraites : {result}")
-        return result
 
     def creer_compte_upwork(self) -> None:
         """
