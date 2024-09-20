@@ -4,10 +4,10 @@ from dotenv import load_dotenv
 import PyPDF2
 import re
 import requests
-
+from collections import Counter
+from prettytable import PrettyTable
 
 class GestionProfil:
-
     def __init__(self) -> None:
         """
         Initialise la classe GestionProfil.
@@ -38,8 +38,7 @@ class GestionProfil:
             self.profil['nom'] = self.extraire_info(text, r"Nom:\s*(.+)")
             self.profil['prenom'] = self.extraire_info(text, r"Prénom:\s*(.+)")
             self.profil['titre'] = self.extraire_info(text, r"Titre:\s*(.+)")
-            self.profil['competences'] = self.extraire_liste(
-                text, r"Compétences:\s*(.+)")
+            self.profil['competences'] = self.extraire_liste(text, r"Compétences:\s*(.+)")
             self.profil['experience'] = self.extraire_experience(text)
             self.profil['formation'] = self.extraire_formation(text)
 
@@ -110,9 +109,7 @@ class GestionProfil:
             if response.status_code == 200:
                 print("Compte Upwork créé avec succès")
             else:
-                print(
-                    f"Échec de la création du compte Upwork. Code d'erreur : {response.status_code}"
-                )
+                print(f"Échec de la création du compte Upwork. Code d'erreur : {response.status_code}")
         except requests.exceptions.RequestException as e:
             print(f"Erreur lors de la création du compte Upwork : {e}")
 
@@ -129,33 +126,132 @@ class GestionProfil:
             "Content-Type": "application/json"
         }
         data = {
-            "firstName": {
-                "localized": {
-                    "fr_FR": self.profil['prenom']
-                }
-            },
-            "lastName": {
-                "localized": {
-                    "fr_FR": self.profil['nom']
-                }
-            },
-            "headline": {
-                "localized": {
-                    "fr_FR": self.profil['titre']
-                }
-            }
+            "firstName": {"localized": {"fr_FR": self.profil['prenom']}},
+            "lastName": {"localized": {"fr_FR": self.profil['nom']}},
+            "headline": {"localized": {"fr_FR": self.profil['titre']}}
         }
         try:
             response = requests.patch(url, headers=headers, json=data)
             if response.status_code == 200:
                 print("Profil LinkedIn mis à jour avec succès")
             else:
-                print(
-                    f"Échec de la mise à jour du profil LinkedIn. Code d'erreur : {response.status_code}"
-                )
+                print(f"Échec de la mise à jour du profil LinkedIn. Code d'erreur : {response.status_code}")
         except requests.exceptions.RequestException as e:
             print(f"Erreur lors de la mise à jour du profil LinkedIn : {e}")
 
+    def obtenir_statistiques(self) -> Dict[str, Any]:
+        """
+        Récupère les statistiques des offres sur toutes les plateformes.
+
+        Returns:
+            Dict[str, Any]: Un dictionnaire contenant les statistiques agrégées.
+        """
+        stats_globales = {
+            "offres_par_region": Counter(),
+            "offres_par_type_poste": Counter(),
+            "tjm_moyen": [],
+            "durees": []
+        }
+
+        for plateforme, url in self.plateformes.items():
+            if url:
+                try:
+                    if plateforme == 'Upwork':
+                        stats = self.stats_upwork()
+                    elif plateforme == 'Freelancer':
+                        stats = self.stats_freelancer()
+                    # ... autres plateformes ...
+
+                    stats_globales["offres_par_region"].update(stats.get("offres_par_region", {}))
+                    stats_globales["offres_par_type_poste"].update(stats.get("offres_par_type_poste", {}))
+                    stats_globales["tjm_moyen"].extend(stats.get("tjm", []))
+                    stats_globales["durees"].extend(stats.get("durees", []))
+                except Exception as e:
+                    print(f"Erreur lors de la récupération des statistiques de {plateforme}: {e}")
+
+        # Calcul du TJM moyen
+        if stats_globales["tjm_moyen"]:
+            stats_globales["tjm_moyen"] = sum(stats_globales["tjm_moyen"]) / len(stats_globales["tjm_moyen"])
+        else:
+            stats_globales["tjm_moyen"] = 0
+
+        return stats_globales
+
+    def afficher_statistiques(self, statistiques: Dict[str, Any]) -> None:
+        """
+        Affiche les statistiques des offres de manière formatée.
+
+        Args:
+            statistiques (Dict[str, Any]): Les statistiques à afficher.
+
+        >>> gp = GestionProfil()
+        >>> stats = {
+        ...     "offres_par_region": Counter({"Paris": 50, "Lyon": 30, "Marseille": 20}),
+        ...     "offres_par_type_poste": Counter({"Développeur": 60, "Designer": 40}),
+        ...     "tjm_moyen": 450,
+        ...     "durees": [30, 60, 90, 120]
+        ... }
+        >>> gp.afficher_statistiques(stats)
+        Statistiques des offres :
+        <BLANKLINE>
+        Offres par région :
+        +------------+-------------+
+        |   Région   | Nombre d'offres |
+        +------------+-------------+
+        |   Paris    |     50      |
+        |    Lyon    |     30      |
+        | Marseille  |     20      |
+        +------------+-------------+
+        <BLANKLINE>
+        Offres par type de poste :
+        +-------------+-------------+
+        | Type de poste | Nombre d'offres |
+        +-------------+-------------+
+        | Développeur |     60      |
+        |  Designer   |     40      |
+        +-------------+-------------+
+        <BLANKLINE>
+        TJM moyen : 450 €
+        <BLANKLINE>
+        Durées des missions :
+        - Minimum : 30 jours
+        - Maximum : 120 jours
+        - Moyenne : 75 jours
+        """
+        print("Statistiques des offres :")
+        print()
+
+        # Affichage des offres par région
+        table_region = PrettyTable()
+        table_region.field_names = ["Région", "Nombre d'offres"]
+        for region, nombre in statistiques["offres_par_region"].most_common():
+            table_region.add_row([region, nombre])
+        print("Offres par région :")
+        print(table_region)
+        print()
+
+        # Affichage des offres par type de poste
+        table_poste = PrettyTable()
+        table_poste.field_names = ["Type de poste", "Nombre d'offres"]
+        for poste, nombre in statistiques["offres_par_type_poste"].most_common():
+            table_poste.add_row([poste, nombre])
+        print("Offres par type de poste :")
+        print(table_poste)
+        print()
+
+        # Affichage du TJM moyen
+        print(f"TJM moyen : {statistiques['tjm_moyen']:.2f} €")
+        print()
+
+        # Affichage des durées des missions
+        durees = statistiques["durees"]
+        if durees:
+            print("Durées des missions :")
+            print(f"- Minimum : {min(durees)} jours")
+            print(f"- Maximum : {max(durees)} jours")
+            print(f"- Moyenne : {sum(durees) / len(durees):.0f} jours")
+        else:
+            print("Aucune information sur les durées des missions")
 
 if __name__ == "__main__":
     import doctest
@@ -167,3 +263,6 @@ if __name__ == "__main__":
 
     gestionnaire.creer_compte_upwork()
     gestionnaire.maj_profil_linkedin()
+    # Obtention et affichage des statistiques
+    stats = gestionnaire.obtenir_statistiques()
+    gestionnaire.afficher_statistiques(stats)
