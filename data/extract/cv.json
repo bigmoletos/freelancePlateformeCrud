@@ -1,0 +1,113 @@
+{
+    "nom": "Francois",
+    "prenom": "Francois",
+    "email": "desmedt.franck@gmail.com",
+    "telephone": "0663748518",
+    "competences": [],
+    "experience": [
+        [
+            "01/11/2023 à 26/09/2024",
+            "Full Stack Data Scientist  (AIOLIV )\n        Prévision du vent en temps réel pour les JO de voile 2024 à Marseille,\n\n        Technologies : Python, Pandas, Numpy, scikit-learn, statsmodels, PyTorch, Keras, API Rest, Jupyter, Django Rest Framework, Knime, MongoDB, GitHub action\n        Développements :\n        API Rest pour upload et restitution des données météo\n        Interface web Django pour affichage des prévisions\n        Déploiement sur Google Cloud Platform\n        Recherche et Tests :\n        Revue de la littérature scientifique sur les prévisions météo\n        Évaluation de modèles Machine-Learning et Deep-Learning (XgBoost, ARIMA, LSTM, CNN, GRU, Transformers…)\n        Collaboration :\n        Partenariat avec MIAGE d'AMU et LIFAB\n        Co-organisateur et mentor d'un défi étudiant et hackathon avec 60 étudiants"
+        ],
+        [
+            "01/03/2020 à 26/06/2023",
+            "Intégrateur Logiciel- Support Java (Agirc-Arrco INFOTEL-AD ’Missions)\n\n        Déploiement et packaging de projets Java Angular sur serveurs linux via des outils internes basés sur Rjboss/Jenkins/SolarV3/Themis/Hibernate sous Windows\n        Versioning sur SVN et Git. Manipulation de Postgres via pgAdmin4, documentation sur Confluence, et déploiements via Hermes et Swagger.\n        Developpeur VBA pour automatisation Excel,\n        Developpeur PHP Symfony 6,\n        Developpeur scripts Jenkins pour gestion JNDI. Support avec Splunk, Ticketing via JIRA, et supervision serveurs sur MRemoteNG"
+        ],
+        [
+            "01/05/2001 à 26/12/2017",
+            "DIRECTEUR ASSOCIE INNOVACTIF (10p) et FONDATEUR H2G MENTORING\n\n        Formation coaching mentoring pour cadres dirigeants. Management des formateurs. Animation cours management MBA de l'ESCP-EAP Paris. Formateur en Management, Maîtrise du temps du stress et de l’énergie, Gestion des conflits et des personnalités difficiles"
+        ],
+        [
+            "01/01/1994 à 26/06/2000",
+            "DG adjoint -RESP DES VENTES, MESUREX (fab d’app de mesure - 12 p -1. 3M€)\n\n        Informatisation de l’entreprise, Écriture du programme de gestion commerciale (Excel4 et en VBA) gestion statistique, KPI, site Internet, mailing fax.\n        Management équipe(10p). Marketing stratégique\n        Redressement de l’entreprise en dépôt de bilan à mon arrivée."
+        ]
+    ],
+    "formation": [
+        [
+            "01/11/2023 à 26/06/2024",
+            "bootcamp (900 h)expert data WildCodeSchool. Major de promo"
+        ],
+        [
+            "01/09/2019 à 26/12/2019",
+            "(400h) bootcamp expert dev Java JEE Spring Security2 Hibernate WildCodeSchool"
+        ],
+        [
+            "01/05/2018 à 26/07/2018",
+            "(400h) Coding bootcamp développement web Java JEE"
+        ],
+        [
+            "01/09/2017 à 26/11/2017",
+            "(400h) Coding bootcamp génie du web full stack PHP Symfony2"
+        ],
+        [
+            "01/01/2000 à 26/12/2000",
+            "(niveau7 bac+5)  Master (Emba) gestion et stratégie des entreprises -ICG paris dauphine"
+        ],
+        [
+            "01/01/1991 à 26/06/1994",
+            "CNAM 4 ans 1er modules ingénieurs, Mathématiques, Mécanique."
+        ],
+        [
+            "01/01/1987 à 26/06/1989",
+            "BTS Maintenance industrielle. Major de promotion et 3eme de l’académie de Versailles"
+        ],
+        [
+            "",
+            "CENTRES D’INTERET:"
+        ],
+        [
+            "    Passionné de nouvelles technologies : IA, ESP32 (C++), informatique, électronique, imp. 3D.",
+            "Pêche à la mouche, rando, Taekwondo (ex-compétiteur coach), Krav Maga, kayak."
+        ],
+        [
+            "    Développement personnel, management, humanisme, psychologie sociale, philosophie, nutrition, nature.",
+            ""
+        ],
+        [
+            "VIE ASSOCIATIVE:",
+            "Membre de la Hack In Provence, cybersécurité et hack éthique depuis 02-2021"
+        ],
+        [
+            "01/01/2002 à 26/12/2020",
+            "Création d’un jardin potager collectif. Mise en place compostage."
+        ]
+    ],
+    "fonction": "Full Stack Data Scientist",
+    "diplomes": [
+        [
+            "01/01/2000 à 26/12/2000",
+            "(niveau7 bac+5)  Master (Emba) gestion et stratégie des entreprises -ICG paris dauphine"
+        ]
+    ],
+    "centres_interet": [],
+    "vie_associative": [
+        [
+            "",
+            "Membre de la Hack In Provence, cybersécurité et hack éthique depuis 02-2021"
+        ],
+        [
+            "",
+            "Administrateur centre socio culturel, Vice-président du CIQ (Comité d’Intérêt de Quartier) 27 entités, 4000p, délégué sécurité police. (01-2002 à 12-2020) Vice-Pdt de la fédération des CIQ du 8éme (01-2016 à 12-2018, 17 CIQ) en charge des relations polices. Co-organisation animations (+gros vide grenier de Marseille)."
+        ],
+        [
+            "",
+            "Création d’un jardin potager collectif. Mise en place compostage."
+        ]
+    ],
+    "projets": [
+        {
+            "date": "01/11/2023 à 26/09/2024",
+            "description": [
+                "Application Django de prediction du vent et de sa direction pour les JO 2024 à Marseille, déploiement sur le cloud, scrapping, traitement, data engineering, modélisation machine learning et deep learning.",
+                "Modèle machine Learning de recommandation de films du style Netflix avec application Django et Api Rest.",
+                "Développement programme multi datasets pour une analyse automatique avec les principaux modéles de machine Learning de scikit-learn",
+                "sept-2019 - nov-2019 :",
+                "Application Web pour tablette de Risk Management des aléas climatique à destination des viticulteurs. Product Owner. Développeur Full Stack, Java JEE Spring Security2",
+                "janv-1996 - dec-1998 :",
+                "GDF instrumentation d'un réseau expérimental unique en France, projet sur 2 ans, de la signature du contrat à la signature de la recette, rédaction du cahier des charges, choix des méthodes et des fournisseurs, validation tests et process, suivi sur site.",
+                "janv-1994 - dec-1998 :",
+                "MESUREX informatisation complète de la PME 10p, développement des programmes de gestion commerciale en Excel 4, mise en place réseau Windows, rédaction fiches produits."
+            ]
+        }
+    ]
+}

@@ -1,81 +1,95 @@
-Francois Romaru
-13009 La Ciotat
-06 63 74 85 18
-desmedt.franck@gmail.com
+prenom: Francois
+nom: Romaru
+adresse: 13009 La Ciotat
+telephone:0663748518
+email: desmedt.franck@gmail.com
+fonction: Full Stack Data Scientist
 
-FONCTION
-Full Stack Data Scientist
 
 
 PARCOURS PROFESSIONNEL
+EXPERIENCE 1:
+    nov-2023 - sept-2024 :
+        Full Stack Data Scientist  (AIOLIV )
+        Prévision du vent en temps réel pour les JO de voile 2024 à Marseille,
 
-Nov-2023-2024 :  Full Stack Data Scientist  (AIOLIV )
-Prévision du vent en temps réel pour les JO de voile 2024 à Marseille,
+        Technologies : Python, Pandas, Numpy, scikit-learn, statsmodels, PyTorch, Keras, API Rest, Jupyter, Django Rest Framework, Knime, MongoDB, GitHub action
+        Développements :
+        API Rest pour upload et restitution des données météo
+        Interface web Django pour affichage des prévisions
+        Déploiement sur Google Cloud Platform
+        Recherche et Tests :
+        Revue de la littérature scientifique sur les prévisions météo
+        Évaluation de modèles Machine-Learning et Deep-Learning (XgBoost, ARIMA, LSTM, CNN, GRU, Transformers…)
+        Collaboration :
+        Partenariat avec MIAGE d'AMU et LIFAB
+        Co-organisateur et mentor d'un défi étudiant et hackathon avec 60 étudiants
 
-Technologies : Python, Pandas, Numpy, scikit-learn, statsmodels, PyTorch, Keras, API Rest, Jupyter, Django Rest Framework, Knime, MongoDB, GitHub action
-Développements :
-API Rest pour upload et restitution des données météo
-Interface web Django pour affichage des prévisions
-Déploiement sur Google Cloud Platform
-Recherche et Tests :
-Revue de la littérature scientifique sur les prévisions météo
-Évaluation de modèles Machine-Learning et Deep-Learning (XgBoost, ARIMA, LSTM, CNN, GRU, Transformers…)
-Collaboration :
-Partenariat avec MIAGE d'AMU et LIFAB
-Co-organisateur et mentor d'un défi étudiant et hackathon avec 60 étudiants
+EXPERIENCE 2:
+    Mars-2020 à juin-2023:
+        Intégrateur Logiciel- Support Java (Agirc-Arrco INFOTEL-AD ’Missions)
 
-Mars 2020 à juin 2023: Intégrateur Logiciel- Support Java (Agirc-Arrco INFOTEL-AD ’Missions)
+        Déploiement et packaging de projets Java Angular sur serveurs linux via des outils internes basés sur Rjboss/Jenkins/SolarV3/Themis/Hibernate sous Windows
+        Versioning sur SVN et Git. Manipulation de Postgres via pgAdmin4, documentation sur Confluence, et déploiements via Hermes et Swagger.
+        Developpeur VBA pour automatisation Excel,
+        Developpeur PHP Symfony 6,
+        Developpeur scripts Jenkins pour gestion JNDI. Support avec Splunk, Ticketing via JIRA, et supervision serveurs sur MRemoteNG
 
-Déploiement et packaging de projets Java Angular sur serveurs linux via des outils internes basés sur Rjboss/Jenkins/SolarV3/Themis/Hibernate sous Windows
-Versioning sur SVN et Git. Manipulation de Postgres via pgAdmin4, documentation sur Confluence, et déploiements via Hermes et Swagger.
-Developpeur VBA pour automatisation Excel,
-Developpeur PHP Symfony 6,
-Developpeur scripts Jenkins pour gestion JNDI. Support avec Splunk, Ticketing via JIRA, et supervision serveurs sur MRemoteNG
+EXPERIENCE 3:
+    mai-2001 à dec-2017
+        DIRECTEUR ASSOCIE INNOVACTIF (10p) et FONDATEUR H2G MENTORING
 
-2001 à 2019 DIRECTEUR ASSOCIE INNOVACTIF (10p) et FONDATEUR H2G MENTORING
+        Formation coaching mentoring pour cadres dirigeants. Management des formateurs. Animation cours management MBA de l'ESCP-EAP Paris. Formateur en Management, Maîtrise du temps du stress et de l’énergie, Gestion des conflits et des personnalités difficiles
 
-Formation coaching mentoring pour cadres dirigeants. Management des formateurs. Animation cours management MBA de l'ESCP-EAP Paris. Formateur en Management, Maîtrise du temps du stress et de l’énergie, Gestion des conflits et des personnalités difficiles
+EXPERIENCE 4:
+    janv-1994 à juin-2000
+        DG adjoint -RESP DES VENTES, MESUREX (fab d’app de mesure - 12 p -1. 3M€)
 
-1994 à 2000 DG adjoint -RESP DES VENTES, MESUREX (fab d’app de mesure - 12 p -1. 3M€)
+        Informatisation de l’entreprise, Écriture du programme de gestion commerciale (Excel4 et en VBA) gestion statistique, KPI, site Internet, mailing fax.
+        Management équipe(10p). Marketing stratégique
+        Redressement de l’entreprise en dépôt de bilan à mon arrivée.
 
-Informatisation de l’entreprise, Écriture du programme de gestion commerciale (Excel4 et en VBA) gestion statistique, KPI, site Internet, mailing fax.
-Management équipe(10p). Marketing stratégique
-Redressement de l’entreprise en dépôt de bilan à mon arrivée.
+PROJETS :
+    nov-2023 - sept-2024:
+        Application Django de prediction du vent et de sa direction pour les JO 2024 à Marseille, déploiement sur le cloud, scrapping, traitement, data engineering, modélisation machine learning et deep learning.
+        Modèle machine Learning de recommandation de films du style Netflix avec application Django et Api Rest.
+        Développement programme multi datasets pour une analyse automatique avec les principaux modéles de machine Learning de scikit-learn
+    sept-2019 - nov-2019 :
+        Application Web pour tablette de Risk Management des aléas climatique à destination des viticulteurs. Product Owner. Développeur Full Stack, Java JEE Spring Security2
+    janv-1996 - dec-1998 :
+        GDF instrumentation d'un réseau expérimental unique en France, projet sur 2 ans, de la signature du contrat à la signature de la recette, rédaction du cahier des charges, choix des méthodes et des fournisseurs, validation tests et process, suivi sur site.
+    janv-1994 - dec-1998 :
+        MESUREX informatisation complète de la PME 10p, développement des programmes de gestion commerciale en Excel 4, mise en place réseau Windows, rédaction fiches produits.
 
-PROJETS
-2023-2024:
-Application Django de prediction du vent et de sa direction pour les JO 2024 à Marseille, déploiement sur le cloud, scrapping, traitement, data engineering, modélisation machine learning et deep learning.
-Modèle machine Learning de recommandation de films du style Netflix avec application Django et Api Rest.
-Développement programme multi datasets pour une analyse automatique avec les principaux modéles de machine Learning de scikit-learn
-2019(sept-nov) :
-Application Web pour tablette de Risk Management des aléas climatique à destination des viticulteurs. Product Owner. Développeur Full Stack, Java JEE Spring Security2
-1996 à 1998 :
-GDF instrumentation d'un réseau expérimental unique en France, projet sur 2 ans, de la signature du contrat à la signature de la recette, rédaction du cahier des charges, choix des méthodes et des fournisseurs, validation tests et process, suivi sur site.
-1994 à1998 :
-MESUREX informatisation complète de la PME 10p, développement des programmes de gestion commerciale en Excel 4, mise en place réseau Windows, rédaction fiches produits.
+VEILLE TECHNOLOGIQUE:
+    Veille hebdomadaire, revue de presses IA
+    Cybersécurité (depuis 2021 member of HIP)
+    Formation Openclassrooms, Udemy, 32 modules, 8 certificats (2017-2023), devops Docker Kubernetes, TDD, Kotlin Java JEE, Angular, Xml scraping, PHP, MySQL, UML, HTML5 et CSS3, algorithmes, Symfony, Python (scrapy)
+    Participation nombreux meetups
+    Hackathon du Frioul “mobilité douce”, chef de projet et speaker (oct. 2019)
 
-VEILLE TECHNOLOGIQUE
-Veille hebdomadaire, revue de presses IA
-Cybersécurité (depuis 2021 member of HIP)
-Formation Openclassrooms, Udemy, 32 modules, 8 certificats (2017-2023), devops Docker Kubernetes, TDD, Kotlin Java JEE, Angular, Xml scraping, PHP, MySQL, UML, HTML5 et CSS3, algorithmes, Symfony, Python (scrapy)
-Participation nombreux meetups
-Hackathon du Frioul “mobilité douce”, chef de projet et speaker (oct. 2019)
+FORMATIONS DIPLOMES :
+    nov-2023 - juin-2024
+        bootcamp (900 h)expert data WildCodeSchool. Major de promo
+    sept-2019 - dec-2019
+        (400h) bootcamp expert dev Java JEE Spring Security2 Hibernate WildCodeSchool
+    mai-2018 - juillet-2018
+        (400h) Coding bootcamp développement web Java JEE
+    sept-2017 - nov-2017
+        (400h) Coding bootcamp génie du web full stack PHP Symfony2
+    janv-2000 - dec-2000
+        (niveau7 bac+5)  Master (Emba) gestion et stratégie des entreprises -ICG paris dauphine
+    janv-1991 - juin-1994
+        CNAM 4 ans 1er modules ingénieurs, Mathématiques, Mécanique.
+    janv-1987 - juin-1989
+        BTS Maintenance industrielle. Major de promotion et 3eme de l’académie de Versailles
 
-DIPLÔMES FORMATIONS
-2023 à 2024(nov-avril_800h) bootcamp expert data WildCodeSchool. Major de promo
-2019(sept-dec_400h) bootcamp expert dev Java JEE Spring Security2 Hibernate WildCodeSchool
-2018(mai-juillet_400h) Coding bootcamp développement web Java JEE
-2017(sept-nov_400h) Coding bootcamp génie du web full stack PHP Symfony2
-2000(niveau7 bac+5) Master (Emba) gestion et stratégie des entreprises -ICG paris dauphine
-1991 à 1994 CNAM 4 ans 1er modules ingénieurs, Mathématiques, Mécanique.
-1987 à 1989 BTS Maintenance industrielle. Major de promotion et 3eme de l’académie de Versailles
+CENTRES D’INTERET:
+    Passionné de nouvelles technologies : IA, ESP32 (C++), informatique, électronique, imp. 3D.
+    Pêche à la mouche, rando, Taekwondo (ex-compétiteur coach), Krav Maga, kayak.
+    Développement personnel, management, humanisme, psychologie sociale, philosophie, nutrition, nature.
 
-CENTRES D’INTERET
-Passionné de nouvelles technologies : IA, ESP32 (C++), informatique, électronique, imp. 3D.
-Pêche à la mouche, rando, Taekwondo (ex-compétiteur coach), Krav Maga, kayak.
-Développement personnel, management, humanisme, psychologie sociale, philosophie, nutrition, nature.
-
-VIE ASSOCIATIVE
-Membre de la Hack In Provence, cybersécurité et hack éthique depuis 2021
-Administrateur centre socio culturel, Vice-président du CIQ (Comité d’Intérêt de Quartier) 27 entités, 4000p, délégué sécurité police. (2002 à 2020) Vice-Pdt de la fédération des CIQ du 8éme (2016-2018, 17 CIQ) en charge des relations polices. Co-organisation animations (+gros vide grenier de Marseille).
-Création d’un jardin potager collectif. Mise en place compostage.
+VIE ASSOCIATIVE:
+    Membre de la Hack In Provence, cybersécurité et hack éthique depuis 02-2021
+    Administrateur centre socio culturel, Vice-président du CIQ (Comité d’Intérêt de Quartier) 27 entités, 4000p, délégué sécurité police. (01-2002 à 12-2020) Vice-Pdt de la fédération des CIQ du 8éme (01-2016 à 12-2018, 17 CIQ) en charge des relations polices. Co-organisation animations (+gros vide grenier de Marseille).
+    Création d’un jardin potager collectif. Mise en place compostage.
