@@ -20,7 +20,6 @@ class GestionProfil:
             'AngelList': 'https://angel.co/api',
             'LinkedIn': 'https://api.linkedin.com/v2',
             'Dice': 'https://www.dice.com/api'
-        }
         self.profil = {}
         self.driver = webdriver.Chrome()  # Pour le scraping
 
