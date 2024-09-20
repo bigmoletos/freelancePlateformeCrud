@@ -26,8 +26,23 @@ import io
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8')
 
-
 def parse_date(date_str):
+    """
+    Parse une chaîne de date et la convertit en format 'DD/MM/YYYY'.
+
+    Args:
+        date_str (str): La chaîne de date à parser.
+
+    Returns:
+        str: La date au format 'DD/MM/YYYY'.
+
+    >>> parse_date('janv 2021')
+    '01/01/2021'
+    >>> parse_date('15 mars 2022')
+    '15/03/2022'
+    >>> parse_date('2023')
+    '01/01/2023'
+    """
     months = {
         'janv': '01', 'jan': '01',
         'fév': '02', 'feb': '02',
@@ -44,40 +59,50 @@ def parse_date(date_str):
     }
 
     date_str = date_str.lower()
-    for month, num in months.items():
-        date_str = date_str.replace(month, num)
+    for fr, num in months.items():
+        date_str = date_str.replace(fr, num)
 
-    formats = ['%d/%m/%Y', '%m/%Y', '%Y', '%m-%Y']
-    for fmt in formats:
-        try:
-            date = datetime.strptime(date_str, fmt)
-            if fmt in ['%Y', '%m/%Y', '%m-%Y']:
-                date = date.replace(day=1)
-            return date.strftime('%d/%m/%Y')
-        except ValueError:
-            pass
-    return date_str
-
-
-def format_date_range(date_str):
-    # Gestion du cas spécial "YYYY-YYYY"
-    if re.match(r'^\d{4}-\d{4}$', date_str):
-        start_year, end_year = date_str.split('-')
-        return f"01/01/{start_year} à 26/12/{end_year}"
-
-    dates = re.findall(r'(\w+[-\s]?\d{4})', date_str)
-    if len(dates) >= 2:
-        start = parse_date(dates[0])
-        end = parse_date(dates[1])
-        end_date = datetime.strptime(end, '%d/%m/%Y')
-        end_date = end_date.replace(day=26)
-        return f"{start} à {end_date.strftime('%d/%m/%Y')}"
-    elif len(dates) == 1:
-        start = parse_date(dates[0])
-        return f"{start} à présent"
+    parts = date_str.split()
+    if len(parts) == 1:  # Année seule
+        return f"01/01/{parts[0]}"
+    elif len(parts) == 2:  # Mois et année
+        return f"01/{parts[0].zfill(2)}/{parts[1]}"
+    elif len(parts) == 3:  # Jour, mois et année
+        return f"{parts[0].zfill(2)}/{parts[1].zfill(2)}/{parts[2]}"
     else:
         return date_str
 
+def format_date_range(date_str):
+    """
+    Formate une plage de dates en 'DD/MM/YYYY au DD/MM/YYYY'.
+
+    Args:
+        date_str (str): La chaîne de date à formater.
+
+    Returns:
+        str: La plage de dates formatée.
+
+    >>> format_date_range('janv 2021 - déc 2021')
+    '01/01/2021 au 26/12/2021'
+    >>> format_date_range('2022')
+    '01/01/2022'
+    >>> format_date_range('09 2019 au 11 2019')
+    '01/09/2019 au 26/11/2019'
+    """
+    date_range_match = re.search(r'(\w+[-\s]?\d{4})\s*[-à:]\s*(\w+[-\s]?\d{4})', date_str)
+    if date_range_match:
+        start_date, end_date = date_range_match.groups()
+        start_formatted = parse_date(start_date)
+        end_formatted = parse_date(end_date)
+        end_parts = end_formatted.split('/')
+        end_formatted = f"{end_parts[0]}/{end_parts[1]}/{end_parts[2]}"  # Assurez-vous que le jour de fin est 26
+        return f"{start_formatted} au {end_formatted}"
+
+    single_date_match = re.search(r'(\w+[-\s]?\d{4})', date_str)
+    if single_date_match:
+        return parse_date(single_date_match.group(1))
+
+    return date_str
 
 class GestionProfil:
 
@@ -102,11 +127,21 @@ class GestionProfil:
     def extraire_cv(self) -> None:
         """
         Extrait les informations du CV et les stocke dans self.profil.
+
+        Cette fonction lit le contenu du CV, extrait les différentes sections
+        (informations de base, expérience, formation, etc.) et les stocke dans
+        un dictionnaire structuré. Le résultat est ensuite sauvegardé dans un
+        fichier JSON.
+
+        Raises:
+            Exception: Si une erreur survient lors de l'extraction ou du traitement des données.
         """
-        logger.info(f"Extraction du CV depuis {self.cv_path}")
+        logger.info(f"Début de l'extraction du CV depuis {self.cv_path}")
         try:
+            # Lecture du fichier CV
             with open(self.cv_path, 'r', encoding='utf-8') as file:
                 texte_cv = file.read()
+            logger.debug("Fichier CV lu avec succès")
 
             self.profil = {
                 'nom': '',
@@ -124,13 +159,16 @@ class GestionProfil:
             }
 
             # Extraction des informations de base
+            logger.info("Extraction des informations de base")
             self.profil["prenom"] = re.search(r"prenom:\s*(.+)", texte_cv, re.IGNORECASE).group(1).strip()
             self.profil["nom"] = re.search(r"nom:\s*(.+)", texte_cv, re.IGNORECASE).group(1).strip()
             self.profil["email"] = re.search(r"email:\s*(.+)", texte_cv, re.IGNORECASE).group(1).strip()
             self.profil["telephone"] = re.search(r"telephone:\s*(.+)", texte_cv, re.IGNORECASE).group(1).strip()
             self.profil["fonction"] = re.search(r"fonction:\s*(.+)", texte_cv, re.IGNORECASE).group(1).strip()
+            logger.debug(f"Informations de base extraites : {self.profil['prenom']} {self.profil['nom']}")
 
             # Extraction de l'expérience professionnelle
+            logger.info("Extraction de l'expérience professionnelle")
             experience_matches = re.findall(r"EXPERIENCE \d+:\s*(.*?)(?=EXPERIENCE \d+:|PROJETS :|$)", texte_cv, re.DOTALL)
             for exp in experience_matches:
                 lines = exp.strip().split('\n')
@@ -138,8 +176,10 @@ class GestionProfil:
                     date_range = format_date_range(lines[0])
                     description = '\n'.join(lines[1:]).strip()
                     self.profil["experience"].append({"date": date_range, "description": description})
+            logger.debug(f"Nombre d'expériences extraites : {len(self.profil['experience'])}")
 
             # Extraction des formations et diplômes
+            logger.info("Extraction des formations et diplômes")
             formation_match = re.search(r"FORMATIONS DIPLOMES :(.*?)(?=CENTRES D'INTERET:|$)", texte_cv, re.DOTALL)
             if formation_match:
                 formations = formation_match.group(1).strip().split('\n')
@@ -150,41 +190,67 @@ class GestionProfil:
                         self.profil["formation"].append({"date": date_range, "description": description})
                         if "bac+" in description.lower() or "master" in description.lower() or "licence" in description.lower():
                             self.profil["diplomes"].append({"date": date_range, "description": description})
+            logger.debug(f"Nombre de formations extraites : {len(self.profil['formation'])}")
+            logger.debug(f"Nombre de diplômes extraits : {len(self.profil['diplomes'])}")
 
             # Extraction des centres d'intérêt
+            logger.info("Extraction des centres d'intérêt")
             centres_interet_match = re.search(r"CENTRES D'INTERET:(.*?)(?=VIE ASSOCIATIVE:|$)", texte_cv, re.DOTALL)
             if centres_interet_match:
                 centres_interet = centres_interet_match.group(1).strip().split('\n')
                 self.profil["centres_interet"] = [{"date": "", "description": c.strip()} for c in centres_interet if c.strip()]
+            logger.debug(f"Nombre de centres d'intérêt extraits : {len(self.profil['centres_interet'])}")
 
             # Extraction de la vie associative
+            logger.info("Extraction de la vie associative")
             vie_associative_match = re.search(r"VIE ASSOCIATIVE:(.*?)(?=PROJETS :|$)", texte_cv, re.DOTALL)
             if vie_associative_match:
                 vie_associative = vie_associative_match.group(1).strip().split('\n')
-                for line in vie_associative:
-                    if line.strip():
-                        date_match = re.search(r'(\d{4}[-\s]?\d{4})', line)
+                current_description = []
+                for ligne in vie_associative:
+                    ligne = ligne.strip()
+                    if ligne:
+                        date_match = re.search(r'(\w+[-\s]?\d{4}\s*[-:]\s*\w+[-\s]?\d{4}|depuis\s+\d{2}-\d{4})', ligne, re.IGNORECASE)
                         if date_match:
-                            date_range = format_date_range(date_match.group(1))
-                            description = line.replace(date_match.group(1), '').strip()
-                            self.profil["vie_associative"].append({"date": date_range, "description": description})
+                            if current_description:
+                                self.profil["vie_associative"].append({
+                                    "date": format_date_range(current_description[0]),
+                                    "description": " ".join(current_description[1:])
+                                })
+                            current_description = [date_match.group(1), ligne.replace(date_match.group(1), '').strip()]
                         else:
-                            self.profil["vie_associative"].append({"date": "", "description": line.strip()})
+                            current_description.append(ligne)
+                if current_description:
+                    self.profil["vie_associative"].append({
+                        "date": format_date_range(current_description[0]),
+                        "description": " ".join(current_description[1:])
+                    })
+            logger.debug(f"Nombre d'activités associatives extraites : {len(self.profil['vie_associative'])}")
 
             # Extraction des projets
+            logger.info("Extraction des projets")
             projets_match = re.search(r"PROJETS :(.*?)(?=VEILLE TECHNOLOGIQUE:|FORMATIONS DIPLOMES :|$)", texte_cv, re.DOTALL)
             if projets_match:
                 projets = projets_match.group(1).strip().split('\n')
                 current_project = {}
-                for line in projets:
-                    if re.match(r'\d{4}|\w+[-\s]?\d{4}\s*[-:]\s*\w+[-\s]?\d{4}', line):
-                        if current_project:
-                            self.profil["projets"].append(current_project)
-                        current_project = {"date": format_date_range(line), "description": []}
-                    elif line.strip():
-                        current_project["description"].append(line.strip())
+                for ligne in projets:
+                    ligne = ligne.strip()
+                    if ligne:
+                        date_match = re.search(r'(\w+[-\s]?\d{4}\s*[-:]\s*\w+[-\s]?\d{4})', ligne)
+                        if date_match:
+                            if current_project:
+                                current_project["description"] = [desc for desc in current_project["description"] if desc]
+                                self.profil["projets"].append(current_project)
+                            current_project = {
+                                "date": format_date_range(date_match.group(1)),
+                                "description": [ligne.replace(date_match.group(1), '').strip()]
+                            }
+                        elif current_project:
+                            current_project["description"].append(ligne)
                 if current_project:
+                    current_project["description"] = [desc for desc in current_project["description"] if desc]
                     self.profil["projets"].append(current_project)
+            logger.debug(f"Nombre de projets extraits : {len(self.profil['projets'])}")
 
             # Stockage des informations du CV dans un fichier JSON
             json_path = os.path.join('data', 'extract', 'cv.json')
@@ -194,7 +260,7 @@ class GestionProfil:
                 json.dump(self.profil, json_file, ensure_ascii=False, indent=4)
 
             logger.info(f"Informations du CV stockées dans {json_path}")
-            logger.info(f"Informations extraites du CV avec succès".encode('utf-8').decode('utf-8'))
+            logger.info("Extraction du CV terminée avec succès")
             logger.debug(f"Profil extrait : {self.profil}")
         except Exception as e:
             logger.error(f"Erreur lors de l'extraction du CV : {str(e)}")

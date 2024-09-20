@@ -50,15 +50,15 @@ EXPERIENCE 4:
         Redressement de l’entreprise en dépôt de bilan à mon arrivée.
 
 PROJETS :
-    nov-2023 - sept-2024:
+    nov-2023 - sept-2024
         Application Django de prediction du vent et de sa direction pour les JO 2024 à Marseille, déploiement sur le cloud, scrapping, traitement, data engineering, modélisation machine learning et deep learning.
         Modèle machine Learning de recommandation de films du style Netflix avec application Django et Api Rest.
         Développement programme multi datasets pour une analyse automatique avec les principaux modéles de machine Learning de scikit-learn
-    sept-2019 - nov-2019 :
+    sept-2019 - nov-2019
         Application Web pour tablette de Risk Management des aléas climatique à destination des viticulteurs. Product Owner. Développeur Full Stack, Java JEE Spring Security2
-    janv-1996 - dec-1998 :
+    janv-1996 - dec-1998
         GDF instrumentation d'un réseau expérimental unique en France, projet sur 2 ans, de la signature du contrat à la signature de la recette, rédaction du cahier des charges, choix des méthodes et des fournisseurs, validation tests et process, suivi sur site.
-    janv-1994 - dec-1998 :
+    janv-1994 - dec-1998
         MESUREX informatisation complète de la PME 10p, développement des programmes de gestion commerciale en Excel 4, mise en place réseau Windows, rédaction fiches produits.
 
 VEILLE TECHNOLOGIQUE:
@@ -84,12 +84,20 @@ FORMATIONS DIPLOMES :
     janv-1987 - juin-1989
         BTS Maintenance industrielle. Major de promotion et 3eme de l’académie de Versailles
 
+
+
 CENTRES D’INTERET:
     Passionné de nouvelles technologies : IA, ESP32 (C++), informatique, électronique, imp. 3D.
     Pêche à la mouche, rando, Taekwondo (ex-compétiteur coach), Krav Maga, kayak.
     Développement personnel, management, humanisme, psychologie sociale, philosophie, nutrition, nature.
 
 VIE ASSOCIATIVE:
-    Membre de la Hack In Provence, cybersécurité et hack éthique depuis 02-2021
-    Administrateur centre socio culturel, Vice-président du CIQ (Comité d’Intérêt de Quartier) 27 entités, 4000p, délégué sécurité police. (01-2002 à 12-2020) Vice-Pdt de la fédération des CIQ du 8éme (01-2016 à 12-2018, 17 CIQ) en charge des relations polices. Co-organisation animations (+gros vide grenier de Marseille).
-    Création d’un jardin potager collectif. Mise en place compostage.
+    depuis 02-2021
+        Membre de la Hack In Provence, cybersécurité et hack éthique
+    janv-2012 - dec-2020
+        Administrateur centre socio culturel,
+        Vice-président du CIQ (Comité d’Intérêt de Quartier) 27 entités, 4000p, délégué sécurité police.
+        Création d’un jardin potager collectif. Mise en place compostage.
+    janv-2016 - dec-2018
+        Vice-Pdt de la fédération des CIQ du 8éme( 17 CIQ) en charge des relations polices.
+        Co-organisation animations (le plus gros vide grenier de Marseille).
