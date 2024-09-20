@@ -6,12 +6,9 @@ import re
 from datetime import datetime
 from selenium import webdriver
 from bs4 import BeautifulSoup
-import os
-from dotenv import load_dotenv
 
 class GestionProfil:
     def __init__(self):
-        load_dotenv()  # Charge les variables d'environnement depuis un fichier .env
         self.plateformes = {
             'Upwork': 'https://developers.upwork.com',
             'Freelancer': 'https://developers.freelancer.com',
@@ -25,8 +22,6 @@ class GestionProfil:
             'Dice': 'https://www.dice.com/api'
         self.profil = {}
         self.driver = webdriver.Chrome()  # Pour le scraping
-        self.email = os.getenv('FREELANCE_EMAIL')
-        self.password = os.getenv('FREELANCE_PASSWORD')
 
     def extraire_cv(self, chemin_fichier):
         # Le code pour extraire les données du CV reste inchangé
@@ -102,21 +97,8 @@ class GestionProfil:
 
     # Méthodes spécifiques pour chaque plateforme
     def creer_compte_upwork(self):
-        url = "https://www.upwork.com/signup/"
-        data = {
-            "email": self.email,
-            "password": self.password,
-            "firstName": self.profil['prenom'],
-            "lastName": self.profil['nom']
-        }
-        try:
-            response = requests.post(url, data=data)
-            if response.status_code == 200:
-                print("Compte Upwork créé avec succès")
-            else:
-                print(f"Échec de la création du compte Upwork. Code d'erreur : {response.status_code}")
-        except requests.exceptions.RequestException as e:
-            print(f"Erreur lors de la création du compte Upwork : {e}")
+        # Implémentation spécifique pour Upwork
+        pass
 
     def creer_compte_freelancer(self):
         # Implémentation spécifique pour Freelancer
