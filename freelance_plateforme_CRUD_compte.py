@@ -2,21 +2,25 @@ import os
 from typing import Dict, List, Any
 from dotenv import load_dotenv
 # import PyPDF2
-# import re
-# import requests
-# from collections import Counter
-# from prettytable import PrettyTable
-# import json
+import re
+import requests
+from collections import Counter
+from prettytable import PrettyTable
+import json
 import logging
 from pyresparser import ResumeParser
 import spacy
-import en_core_web_sm
+# import en_core_web_sm
+import fr_core_news_md
 
 # Configuration du logging
-logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(level=logging.DEBUG,
+                    format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
+
 class GestionProfil:
+
     def __init__(self) -> None:
         """
         Initialise la classe GestionProfil.
@@ -30,6 +34,7 @@ class GestionProfil:
         self.profil: Dict[str, Any] = {}
         # self.cv_path: str = "data/cv.pdf"
         self.cv_path: str = "data/cv.txt"
+        self.nlp = fr_core_news_md.load()
         try:
             self.extraire_cv()
         except Exception as e:
@@ -41,7 +46,8 @@ class GestionProfil:
         """
         logger.info(f"Extraction du CV depuis {self.cv_path}")
         try:
-            data = ResumeParser(self.cv_path).get_extracted_data()
+            data = ResumeParser(self.cv_path,
+                                custom_nlp=self.nlp).get_extracted_data()
 
             self.profil['nom'] = data.get('name', '').split()[-1] if data.get('name') else ''
             self.profil['prenom'] = data.get('name', '').split()[0] if data.get('name') else ''
