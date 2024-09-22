@@ -1,0 +1,31 @@
+{
+    "prenom": "Francois",
+    "nom": "Romaru",
+    "adresse": "13009 La Ciotat",
+    "telephone": "0663748518",
+    "email": "romaru@yopmail.com",
+    "fonction": "Full Stack Data Scientist",
+    "parcours_professionnel": {
+        "experience": [
+            {
+                "date": "nov-2023 - sept-2024",
+                "titre": "Full Stack Data Scientist",
+                "entreprise": "AIOLIV",
+                "description": "Prévision du vent en temps réel pour les JO de voile 2024 à Marseille, [Détails sur les responsabilités et technologies...]"
+            },
+            {
+                "date": "Mars-2020 à juin-2023",
+                "titre": "Intégrateur Logiciel- Support Java",
+                "entreprise": "Agirc-Arrco INFOTEL-AD ‘Missions",
+                "description": "[Détails sur les responsabilités et technologies...]"
+            }
+        ]
+    },
+    "autres": {
+        "experiences": [],
+        "formations": [],
+        "projets": [],
+        "vie_associative": [],
+        "centres_d_interet": []
+    }
+}
