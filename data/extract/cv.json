@@ -1,0 +1,23 @@
+{
+    "prenom": "Francois",
+    "nom": "Francois",
+    "email": "desmedt.franck@gmail.com",
+    "telephone": "0663748518",
+    "fonction": "Full Stack Data Scientist",
+    "formations_diplomes": [],
+    "centres_d'interet": [],
+    "vie_associative": [
+        {
+            "date": "01/01/02-2021",
+            "description": " Membre de la Hack In Provence, cybersécurité et hack éthique"
+        },
+        {
+            "date": "01/01/01-2012 au 01/01/12-2020",
+            "description": " Administrateur centre socio culturel, Vice-président du CIQ (Comité d’Intérêt de Quartier) 27 entités, 4000p, délégué sécurité police. Création d’un jardin potager collectif. Mise en place compostage."
+        },
+        {
+            "date": "01/01/01-2016 au 01/01/12-2018",
+            "description": " Vice-Pdt de la fédération des CIQ du 8éme( 17 CIQ) en charge des relations polices. Co-organisation animations (le plus gros vide grenier de Marseille)."
+        }
+    ]
+}

@@ -1,0 +1,52 @@
+{
+    "prenom": "Francois",
+    "nom": "Romaru",
+    "email": "desmedt.franck@gmail.com",
+    "telephone": "0663748518",
+    "fonction": "Full Stack Data Scientist",
+    "formations": [
+        {
+            "periode": "nov-2023 - juin-2024",
+            "description": "bootcamp (900 h)expert data WildCodeSchool. Major de promo"
+        },
+        {
+            "periode": "sept-2019 - dec-2019",
+            "description": "(400h) bootcamp expert dev Java JEE Spring Security2 Hibernate WildCodeSchool"
+        },
+        {
+            "periode": "mai-2018 - juillet-2018",
+            "description": "(400h) Coding bootcamp développement web Java JEE"
+        },
+        {
+            "periode": "sept-2017 - nov-2017",
+            "description": "(400h) Coding bootcamp génie du web full stack PHP Symfony2"
+        },
+        {
+            "periode": "janv-2000 - dec-2000",
+            "description": "(niveau7 bac+5) Master (Emba) gestion et stratégie des entreprises -ICG paris dauphine"
+        },
+        {
+            "periode": "janv-1991 - juin-1994",
+            "description": "CNAM 4 ans 1er modules ingénieurs, Mathématiques, Mécanique."
+        },
+        {
+            "periode": "janv-1987 - juin-1989",
+            "description": "BTS Maintenance industrielle. Major de promotion et 3eme de l’académie de Versailles."
+        }
+    ],
+    "centres_d_interet": "Passionné de nouvelles technologies : IA, ESP32 (C++), informatique, électronique, imp. 3D. Pêche à la mouche, rando, Taekwondo (ex-compétiteur coach), Krav Maga, kayak. Développement personnel, management, humanisme, psychologie sociale, philosophie, nutrition, nature.",
+    "vie_associative": [
+        {
+            "periode": "depuis 02-2021",
+            "description": "Membre de la Hack In Provence, cybersécurité et hack éthique"
+        },
+        {
+            "periode": "janv-2012 - dec-2020",
+            "description": "Administrateur centre socio culturel, Vice-président du CIQ (Comité d’Intérêt de Quartier) 27 entités, 4000p, délégué sécurité police. Création d’un jardin potager collectif. Mise en place compostage."
+        },
+        {
+            "periode": "janv-2016 - dec-2018",
+            "description": "Vice-Pdt de la fédération des CIQ du 8éme( 17 CIQ) en charge des relations polices. Co-organisation animations (le plus gros vide grenier de Marseille)."
+        }
+    ]
+}
