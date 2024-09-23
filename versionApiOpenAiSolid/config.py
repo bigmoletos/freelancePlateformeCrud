@@ -25,3 +25,15 @@ if not ORGANIZATION_ID:
     raise ValueError(
         "L'Organization ID n'a pas été défini correctement. Veuillez vérifier le fichier .env et définir USE_ORGANIZATION_ID."
     )
+
+
+FREELANCE_EMAIL = os.getenv("FREELANCE_EMAIL")
+if not FREELANCE_EMAIL:
+    raise ValueError(
+        "L'email du freelance n'a pas été défini correctement. Veuillez vérifier le fichier .env et définir FREELANCE_EMAIL."
+    )
+
+FREELANCE_PASSWORD = os.getenv("FREELANCE_PASSWORD")
+if not FREELANCE_PASSWORD:
+    raise ValueError(
+        "Le mot de passe du freelance n'a pas été défini correctement. Veuillez vérifier le fichier .env et définir FREELANCE_PASSWORD."
