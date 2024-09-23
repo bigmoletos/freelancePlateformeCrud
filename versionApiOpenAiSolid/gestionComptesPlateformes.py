@@ -1,12 +1,15 @@
 import json
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
+import requests
 from logger import logger
 from config import FREELANCE_EMAIL, FREELANCE_PASSWORD
+from cv_loader import CVLoader
+
+
 
 class Plateforme:
+
     def __init__(self, nom, url):
+   
         """
         Initialiser la plateforme avec un nom et une URL.
 
@@ -15,37 +18,21 @@ class Plateforme:
         """
         self.nom = nom
         self.url = url
-        self.driver = None
 
     def creer_compte(self):
         """
         Créer un compte sur la plateforme.
-        Cette méthode utilise Selenium pour ouvrir un navigateur, accéder à l'URL de la plateforme,
+        Cette méthode utilise des requêtes HTTP pour accéder à l'URL de la plateforme,
         remplir le formulaire d'inscription et soumettre le formulaire.
         """
         logger.info(f"Création du compte sur {self.nom}")
-        self.driver = webdriver.Chrome()
-        self.driver.get(self.url)
         self.remplir_formulaire_inscription()
         logger.info(f"Compte créé sur {self.nom}")
-        self.driver.quit()
 
     def remplir_formulaire_inscription(self):
         """
         Remplir le formulaire d'inscription spécifique à la plateforme.
-        Cette méthode doit être implémentée par les sous-classes pour fournir les sélecteurs spécifiques.
-        """
-        email_selector, password_selector, submit_selector = self.get_selectors()
-        self.driver.find_element(By.CSS_SELECTOR, email_selector).send_keys(FREELANCE_EMAIL)
-        self.driver.find_element(By.CSS_SELECTOR, password_selector).send_keys(FREELANCE_PASSWORD)
-        self.driver.find_element(By.CSS_SELECTOR, submit_selector).send_keys(Keys.RETURN)
-
-    def get_selectors(self):
-        """
-        Obtenir les sélecteurs spécifiques pour les champs d'email, de mot de passe et de soumission.
-        Cette méthode doit être implémentée par les sous-classes.
-
-        :return: Tuple contenant les sélecteurs pour l'email, le mot de passe et le bouton de soumission
+        Cette méthode doit être implémentée par les sous-classes pour fournir les étapes spécifiques.
         """
         raise NotImplementedError("Cette méthode doit être implémentée par les sous-classes.")
 
@@ -67,82 +54,100 @@ class Plateforme:
         """
         raise NotImplementedError("Cette méthode doit être implémentée par les sous-classes.")
 
-class Upwork(Plateforme):
+class Malt(Plateforme):
     def __init__(self):
-        super().__init__('Upwork', 'https://www.upwork.com')
+        # super().__init__('Malt', 'https://www.malt.fr/freelancer-signup/signup/headline')
+        super().__init__('Malt', 'https://www.malt.fr/registration/api/user/me')
+# pai d'inscription https://www.malt.fr/registration/api/user/me
 
-    def get_selectors(self):
-        """Obtenir les sélecteurs pour Upwork."""
-        return "#signup_email", "#signup_password", "#signup_password"
+    def remplir_formulaire_inscription(self):
+        """
+        Remplir le formulaire d'inscription pour Malt en utilisant l'API et les données du CV.
+        """
+        session = requests.Session()
+        headers = {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        }
+        # Charger les données du CV
+        with open("data/extract/cv.json", "r",
+                  encoding="utf-8") as fichier_json:
+            cv = json.load(fichier_json)
+
+    # def mettre_a_jour_profil(self, profil):
+    #     """Mettre à jour le profil sur Upwork."""
+    #     logger.info(f"Mise à jour du profil sur {self.nom}")
+    #     # Implémentation spécifique pour mettre à jour le profil Upwork
+    #     pass
+#https://www.malt.fr/api/profile/new/with-account
+# {"location":"Marseille, France","countryCode":"FR","city":"Marseille","country":"France","administrativeAreaLevel1":"Provence-Alpes-Côte d'Azur","administrativeAreaLevel1Code":"Provence-Alpes-Côte d'Azur","administrativeAreaLevel2":"Bouches-du-Rhône","administrativeAreaLevel2Code":null,"administrativeAreaLevel3":null,"administrativeAreaLevel3Code":null,"administrativeAreaLevel4":null,"administrativeAreaLevel4Code":null,"lat":43.29695,"lon":5.38107,"workPlacePreference":"ONSITE","willingnessToTravelInternationally":false,"headline":"data scientist","experienceLevel":"INTERMEDIATE","tags":["Machine learning","Python","Data visualisation","SQL","Scikit-learn","Deep Learning","Analyse de données","Pandas","TensorFlow","NLP","Big Data","Data mining","Git","Gestion de projet","Microsoft Excel"],"price":550,"priceHidden":false,"phoneNumber":"+33663748518","families":["data"],"categories":["data_scientist","data_analyst"],"preferredFamily":"data","preferredCategory":"data_scientist","categorySuggestion":null,"industryExpertises":[],"functionalSkills":[],"invitationCode":null,"languages":[{"language":{"code":"fr","name":"Français"},"level":"NATIVE"}],"funnelMode":"FREELANCER","corporateProgram":null}
+
+# Extraire les compétences du CV
+        competences = []
+        for experience in cv.get("parcours_professionnel", []):
+            competences.extend(experience.get("technologies", []))
+        competences = list(set(competences))  # Supprimer les doublons
+
+        # Préparer les données pour l'inscription
+        data = {
+            "location": f"{cv.get('adresse', 'Marseille')}, France",
+            "countryCode": "FR",
+            "city": cv.get('adresse', 'Marseille').split(',')[0].strip(),
+            "country": "France",
+            "administrativeAreaLevel1": "Provence-Alpes-Côte d'Azur",
+            "administrativeAreaLevel1Code": "Provence-Alpes-Côte d'Azur",
+            "administrativeAreaLevel2": "Bouches-du-Rhône",
+            "lat": 43.29695,  # Ces valeurs devraient idéalement être obtenues via une API de géocodage
+            "lon": 5.38107,
+            "workPlacePreference": "ONSITE",
+            "willingnessToTravelInternationally": False,
+            "headline": cv.get("fonction", ""),
+            "experienceLevel": "INTERMEDIATE",  # Cette valeur pourrait être déterminée en fonction de l'expérience dans le CV
+            "tags": competences[:15],  # Malt limite probablement le nombre de tags
+            "price": 550,  # Cette valeur devrait être déterminée en fonction du CV ou des préférences de l'utilisateur
+            "priceHidden": False,
+            "phoneNumber": cv.get("telephone", ""),
+            "families": ["data"],  # Cette valeur devrait être déterminée en fonction du CV
+            "categories": ["data_scientist", "data_analyst"],  # Ces catégories devraient être déterminées en fonction du CV
+            "preferredFamily": "data",
+            "preferredCategory": "data_scientist",
+            "languages": [{"language": {"code": "fr", "name": "Français"}, "level": "NATIVE"}],  # Ces informations devraient être extraites du CV
+            "funnelMode": "FREELANCER"
+        }
+
+        # Envoyer la requête d'inscription
+        response = session.post(self.url, json=data, headers=headers)
+        if response.status_code != 200:
+            logger.error(f"Échec de l'inscription sur {self.nom}: {response.text}")
+            return
+
+        # Créer le compte
+        account_data = {
+            "account": {
+                "firstName": cv.get("prenom", ""),
+                "lastName": cv.get("nom", ""),
+                "email": FREELANCE_EMAIL,
+                "password": FREELANCE_PASSWORD,
+                "optOutFromNewsletter": True
+            },
+            "profileCreationRequestId": response.json().get("profileCreationRequestId")
+        }
+
+        response = session.post(f"{self.url}/with-account", json=account_data, headers=headers)
+        if response.status_code != 200:
+            logger.error(f"Échec de la création du compte sur {self.nom}: {response.text}")
+            return
+
+        logger.info(f"Inscription réussie sur {self.nom}")
 
     def mettre_a_jour_profil(self, profil):
-        """Mettre à jour le profil sur Upwork."""
+        """Mettre à jour le profil sur Malt."""
         logger.info(f"Mise à jour du profil sur {self.nom}")
-        # Implémentation spécifique pour mettre à jour le profil Upwork
+        # Implémentation spécifique pour mettre à jour le profil Malt
         pass
 
     def obtenir_statistiques(self):
-        """Obtenir des statistiques sur Upwork."""
-        logger.info(f"Obtention des statistiques sur {self.nom}")
-        # Implémentation spécifique pour obtenir les statistiques Upwork
-        pass
-
-class Freelancer(Plateforme):
-    def __init__(self):
-        super().__init__('Freelancer', 'https://www.freelancer.com')
-
-    def get_selectors(self):
-        """Obtenir les sélecteurs pour Freelancer."""
-        return "#email", "#password", "#password"
-
-    def mettre_a_jour_profil(self, profil):
-        """Mettre à jour le profil sur Freelancer."""
-        logger.info(f"Mise à jour du profil sur {self.nom}")
-        # Implémentation spécifique pour mettre à jour le profil Freelancer
-        pass
-
-    def obtenir_statistiques(self):
-        """Obtenir des statistiques sur Freelancer."""
-        logger.info(f"Obtention des statistiques sur {self.nom}")
-        # Implémentation spécifique pour obtenir les statistiques Freelancer
-        pass
-
-class Guru(Plateforme):
-    def __init__(self):
-        super().__init__('Guru', 'https://www.guru.com')
-
-    def get_selectors(self):
-        """Obtenir les sélecteurs pour Guru."""
-        return "#email", "#password", "#password"
-
-    def mettre_a_jour_profil(self, profil):
-        """Mettre à jour le profil sur Guru."""
-        logger.info(f"Mise à jour du profil sur {self.nom}")
-        # Implémentation spécifique pour mettre à jour le profil Guru
-        pass
-
-    def obtenir_statistiques(self):
-        """Obtenir des statistiques sur Guru."""
-        logger.info(f"Obtention des statistiques sur {self.nom}")
-        # Implémentation spécifique pour obtenir les statistiques Guru
-        pass
-
-class AngelList(Plateforme):
-    def __init__(self):
-        super().__init__('AngelList', 'https://angel.co')
-
-    def get_selectors(self):
-        """Obtenir les sélecteurs pour AngelList."""
-        return "#user_email", "#user_password", "#user_password"
-
-    def mettre_a_jour_profil(self, profil):
-        """Mettre à jour le profil sur AngelList."""
-        logger.info(f"Mise à jour du profil sur {self.nom}")
-        # Implémentation spécifique pour mettre à jour le profil AngelList
-        pass
-
-    def obtenir_statistiques(self):
-        """Obtenir des statistiques sur AngelList."""
+        """Obtenir des statistiques sur Malt."""
         logger.info(f"Obtention des statistiques sur {self.nom}")
         # Implémentation spécifique pour obtenir les statistiques AngelList
         pass
@@ -187,24 +192,24 @@ class Dice(Plateforme):
         # Implémentation spécifique pour obtenir les statistiques Dice
         pass
 
-class Malt(Plateforme):
+class Upwork(Plateforme):
     def __init__(self):
-        super().__init__('Malt', 'https://www.malt.fr')
+        super().__init__('Upwork', 'https://www.upwork.com')
 
     def get_selectors(self):
-        """Obtenir les sélecteurs pour Malt."""
-        return "#email", "#password", "#password"
+        """Obtenir les sélecteurs pour Upwork."""
+        return "#email", "#password", "button[type='submit']"
 
     def mettre_a_jour_profil(self, profil):
-        """Mettre à jour le profil sur Malt."""
+        """Mettre à jour le profil sur Upwork."""
         logger.info(f"Mise à jour du profil sur {self.nom}")
-        # Implémentation spécifique pour mettre à jour le profil Malt
+        # Implémentation spécifique pour mettre à jour le profil Upwork
         pass
 
     def obtenir_statistiques(self):
-        """Obtenir des statistiques sur Malt."""
+        """Obtenir des statistiques sur Upwork."""
         logger.info(f"Obtention des statistiques sur {self.nom}")
-        # Implémentation spécifique pour obtenir les statistiques Malt
+        # Implémentation spécifique pour obtenir les statistiques Upwork
         pass
 
 class Tekkit(Plateforme):
@@ -242,7 +247,6 @@ class GestionProfil:
             Malt(),
             Tekkit()
         ]
-        self.driver = webdriver.Chrome()  # Pour le scraping
 
     def creer_comptes(self):
         """
@@ -286,7 +290,7 @@ if __name__ == "__main__":
     gestionnaire = GestionProfil()
 
     # Extraction des données du CV
-    chemin_fichier_cv = "data/cv.json"
+    chemin_fichier_cv = "data/extract/cv.json"
     with open(chemin_fichier_cv, "r", encoding="utf-8") as fichier_json:
         profil = json.load(fichier_json)
 
