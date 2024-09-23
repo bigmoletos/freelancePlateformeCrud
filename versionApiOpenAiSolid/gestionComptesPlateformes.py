@@ -4,12 +4,8 @@ from logger import logger
 from config import FREELANCE_EMAIL, FREELANCE_PASSWORD
 from cv_loader import CVLoader
 
-
-
 class Plateforme:
-
     def __init__(self, nom, url):
-   
         """
         Initialiser la plateforme avec un nom et une URL.
 
@@ -18,6 +14,7 @@ class Plateforme:
         """
         self.nom = nom
         self.url = url
+        self.cv_loader = CVLoader()
 
     def creer_compte(self):
         """
@@ -69,20 +66,10 @@ class Malt(Plateforme):
             'Content-Type': 'application/json',
             'Accept': 'application/json'
         }
-        # Charger les données du CV
-        with open("data/extract/cv.json", "r",
-                  encoding="utf-8") as fichier_json:
-            cv = json.load(fichier_json)
 
-    # def mettre_a_jour_profil(self, profil):
-    #     """Mettre à jour le profil sur Upwork."""
-    #     logger.info(f"Mise à jour du profil sur {self.nom}")
-    #     # Implémentation spécifique pour mettre à jour le profil Upwork
-    #     pass
-#https://www.malt.fr/api/profile/new/with-account
-# {"location":"Marseille, France","countryCode":"FR","city":"Marseille","country":"France","administrativeAreaLevel1":"Provence-Alpes-Côte d'Azur","administrativeAreaLevel1Code":"Provence-Alpes-Côte d'Azur","administrativeAreaLevel2":"Bouches-du-Rhône","administrativeAreaLevel2Code":null,"administrativeAreaLevel3":null,"administrativeAreaLevel3Code":null,"administrativeAreaLevel4":null,"administrativeAreaLevel4Code":null,"lat":43.29695,"lon":5.38107,"workPlacePreference":"ONSITE","willingnessToTravelInternationally":false,"headline":"data scientist","experienceLevel":"INTERMEDIATE","tags":["Machine learning","Python","Data visualisation","SQL","Scikit-learn","Deep Learning","Analyse de données","Pandas","TensorFlow","NLP","Big Data","Data mining","Git","Gestion de projet","Microsoft Excel"],"price":550,"priceHidden":false,"phoneNumber":"+33663748518","families":["data"],"categories":["data_scientist","data_analyst"],"preferredFamily":"data","preferredCategory":"data_scientist","categorySuggestion":null,"industryExpertises":[],"functionalSkills":[],"invitationCode":null,"languages":[{"language":{"code":"fr","name":"Français"},"level":"NATIVE"}],"funnelMode":"FREELANCER","corporateProgram":null}
+        cv = self.cv_loader.cv
 
-# Extraire les compétences du CV
+        # Extraire les compétences du CV
         competences = []
         for experience in cv.get("parcours_professionnel", []):
             competences.extend(experience.get("technologies", []))
@@ -149,7 +136,7 @@ class Malt(Plateforme):
     def obtenir_statistiques(self):
         """Obtenir des statistiques sur Malt."""
         logger.info(f"Obtention des statistiques sur {self.nom}")
-        # Implémentation spécifique pour obtenir les statistiques AngelList
+        # Implémentation spécifique pour obtenir les statistiques Malt
         pass
 
 class LinkedIn(Plateforme):
