@@ -1,8 +1,8 @@
 prenom: Francois
 nom: Romaru
-adresse: 13009 La Ciotat
+adresse: 13009 MARSEILLE
 telephone:0663748518
-email: ROROmaru@yopmail.com
+email: RUOmaru@yopmail.com
 fonction: Full Stack Data Scientist
 
 
