@@ -53,79 +53,152 @@ class Plateforme:
 
 class Malt(Plateforme):
     def __init__(self):
-        # super().__init__('Malt', 'https://www.malt.fr/freelancer-signup/signup/headline')
-        super().__init__('Malt', 'https://www.malt.fr/registration/api/user/me')
-# pai d'inscription https://www.malt.fr/registration/api/user/me
+        super().__init__('Malt', 'https://www.malt.fr')
+        self.base_url = 'https://www.malt.fr'
+        self.signin_url = f'{self.base_url}/registration/api/signin-request-with-authentication-details'
+        self.profile_url = f'{self.base_url}/profile/api/experiences'
 
-    def remplir_formulaire_inscription(self):
+    def get_headers(self, action, cookies=None):
         """
-        Remplir le formulaire d'inscription pour Malt en utilisant l'API et les données du CV.
+        Générer les headers pour les différentes actions.
         """
-        session = requests.Session()
-        headers = {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
+        common_headers = {
+            'accept-language': 'fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7',
+            'content-type': 'application/json',
+            'origin': 'https://www.malt.fr',
+            'referer': 'https://www.malt.fr/signin?redirect=/freelancer-signup/completion/linkedin-import',
+            'x-xsrf-token': '695c4839-5cf4-4492-923e-ae841ea8e757',
+            'sec-ch-ua': '"Google Chrome";v="129", "Not=A?Brand";v="8", "Chromium";v="129"',
+            'sec-ch-ua-mobile': '?0',
+            'sec-ch-ua-platform': '"Windows"',
+            'sec-fetch-dest': 'empty',
+            'sec-fetch-mode': 'cors',
+            'sec-fetch-site': 'same-origin',
+            'priority': 'u=1, i'
         }
+
+        if cookies:
+            common_headers['cookie'] = cookies
+
+        if action == 'signin':
+            return common_headers
+        elif action == 'profile':
+            return {
+                **common_headers,
+                'Content-Type': 'application/json;charset=UTF-8',
+                'Accept': '*/*',
+                'Accept-Encoding': 'gzip, deflate, br, zstd',
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        else:
+            return common_headers
+
+    def get_url(self, action):
+        """
+        Générer les URLs pour les différentes actions.
+        """
+        if action == 'signin':
+            return self.signin_url
+        elif action == 'profile':
+            return self.profile_url
+        else:
+            return self.base_url
+
+    def connexion(self):
+        """
+        Se connecter à Malt en utilisant l'API de connexion.
+        """
+        cookies = (
+            'i18n=fr-FR; XSRF-TOKEN=695c4839-5cf4-4492-923e-ae841ea8e757; '
+            'malt-visitorId=3f696c81-7d8c-4879-9cba-3953a135db93; '
+            'OptanonAlertBoxClosed=2024-09-23T16:56:40.839Z; '
+            '__cfruid=b5cb2b9015b8f6c7bb190cbad1a0f95accd4714c-1727110712; '
+            'hopsi=66f1a66567839d4d3a38ae73; _gcl_au=1.1.1369150334.1727155236; '
+            'JSESSIONID=93F05039E287436203635F74128E2414; '
+            'remember-me=ZVBONHlXR1BHOWNuN3NzSDZVbWwlMkZ3JTNEJTNEOjdhSE5jQld6TDREMzZaYWY2aXhmWUElM0QlM0Q; '
+            'SESSION=YWEwZDQyYmItMGI5NC00OGJmLWJmM2UtNGYzOWMzMTZlY2Fk; '
+            'cf_clearance=sXIaLYo70lUKPCOS9qvbwgGQn0AJ9eA1Botvv.q8rdI-1727163624-1.2.1.1-'
+            'u5XQtx2hOzFEAqknBS4MLYPEYvrvcThLj4yVP4e.7w9fb3wh4glezfSFpZzjfOF.78.iunFeTzZGo2XKMBIDliahRiN9zN1LNIs8Bo8HU9GBb_6sKrxCrdmVHFBAhgMbg6omyYrFgo2.j5iHh9U..TE_km9AzeViJR7TdR.OwCPok4j2W5sF.PlWmAsMGBEXq1ByyRPK_Y6rkrNfY2Db_kLkXEwhN.qamWnB.p5YrdF.hm7R_wtx2dtX60CBT.uC6zI6sTVJvD752R_l59j4jUO0bYBcELzyRG11xJtLcmmHR3WMkBxusprPQtaS6.UxIibsRwRhppLwp1.axIlzKmOS9saF3BUp8k9yhvO7XVk9SC21mEof4Decj0PMdhkr; '
+            'OptanonConsent=isGpcEnabled=0&datestamp=Tue+Sep+24+2024+09%3A40%3A24+GMT%2B0200+(heure+d%E2%80%99%C3%A9t%C3%A9+d%E2%80%99Europe+centrale)&version=202211.2.0&isIABGlobal=false&hosts=&consentId=ff6c826b-7793-43b8-9d30-98d03acba425&interactionCount=1&landingPath=NotLandingPage&groups=C0001%3A1%2CC0003%3A0%2CC0002%3A0%2CC0004%3A0%2CC0005%3A0&AwaitingReconsent=false&geolocation=%3B; '
+            '__cf_bm=VY7Dw0_.GUXnPxMg7i7q7vq2wq7o96IoaIZKJ5bbcs8-1727168606-1.0.1.1-yUCdBOQLxwCObMcaiU3.Ch0OrAqm5A.t_c814tlIA4lmWtqf54jsae.LcGdRUL1BaMfnQFo95rGqnFxOenaAmPTD0B8FZ06tD2fRHo.4pw0'
+        )
+
+        headers = self.get_headers('signin', cookies=cookies)
+
+        data = {
+            'email': FREELANCE_EMAIL,
+            'password': FREELANCE_PASSWORD
+        }
+
+        try:
+            response = requests.post(self.get_url('signin'), headers=headers, json=data)
+            response.raise_for_status()
+            logger.info(f"Connexion réussie sur {self.nom}")
+            return response.cookies
+        except requests.exceptions.RequestException as e:
+            logger.error(f"Échec de la connexion sur {self.nom}: {str(e)}")
+            return None
+
+    def completer_profil(self, cookies):
+        """
+        Compléter le profil sur Malt en utilisant l'API et les données du CV.
+        """
+        headers = self.get_headers('profile', cookies=cookies)
 
         cv = self.cv_loader.cv
 
-        # Extraire les compétences du CV
-        competences = []
-        for experience in cv.get("parcours_professionnel", []):
-            competences.extend(experience.get("technologies", []))
-        competences = list(set(competences))  # Supprimer les doublons
+        # Extraire les informations nécessaires du CV
+        experience = cv.get("parcours_professionnel", [])[0]  # Utiliser la première expérience comme exemple
+        location = cv.get("adresse", "Aix-en-Provence, France")
+        city = location.split(',')[0].strip()
+        start_date = experience.get("date_debut", "2023-01-24")
+        end_date = experience.get("date_fin", "2024-09-17")
+        title = experience.get("intitule_poste", "intitule du poste romaru")
+        company = experience.get("nom_entreprise", "ferry")
+        description = experience.get("description", "sdssdssdsdssddssdssdssssdqqqqqqqqqqzderthhhyregthhtgfregtzvrgezrgrevrgzgregzbzefzgrthththtrgrgrrgzrgr")
 
-        # Préparer les données pour l'inscription
+        # Préparer les données pour compléter le profil
         data = {
-            "location": f"{cv.get('adresse', 'Marseille')}, France",
-            "countryCode": "FR",
-            "city": cv.get('adresse', 'Marseille').split(',')[0].strip(),
-            "country": "France",
-            "administrativeAreaLevel1": "Provence-Alpes-Côte d'Azur",
-            "administrativeAreaLevel1Code": "Provence-Alpes-Côte d'Azur",
-            "administrativeAreaLevel2": "Bouches-du-Rhône",
-            "lat": 43.29695,  # Ces valeurs devraient idéalement être obtenues via une API de géocodage
-            "lon": 5.38107,
-            "workPlacePreference": "ONSITE",
-            "willingnessToTravelInternationally": False,
-            "headline": cv.get("fonction", ""),
-            "experienceLevel": "INTERMEDIATE",  # Cette valeur pourrait être déterminée en fonction de l'expérience dans le CV
-            "tags": competences[:15],  # Malt limite probablement le nombre de tags
-            "price": 550,  # Cette valeur devrait être déterminée en fonction du CV ou des préférences de l'utilisateur
-            "priceHidden": False,
-            "phoneNumber": cv.get("telephone", ""),
-            "families": ["data"],  # Cette valeur devrait être déterminée en fonction du CV
-            "categories": ["data_scientist", "data_analyst"],  # Ces catégories devraient être déterminées en fonction du CV
-            "preferredFamily": "data",
-            "preferredCategory": "data_scientist",
-            "languages": [{"language": {"code": "fr", "name": "Français"}, "level": "NATIVE"}],  # Ces informations devraient être extraites du CV
-            "funnelMode": "FREELANCER"
-        }
-
-        # Envoyer la requête d'inscription
-        response = session.post(self.url, json=data, headers=headers)
-        if response.status_code != 200:
-            logger.error(f"Échec de l'inscription sur {self.nom}: {response.text}")
-            return
-
-        # Créer le compte
-        account_data = {
-            "account": {
-                "firstName": cv.get("prenom", ""),
-                "lastName": cv.get("nom", ""),
-                "email": FREELANCE_EMAIL,
-                "password": FREELANCE_PASSWORD,
-                "optOutFromNewsletter": True
+            "companyId": "",
+            "endDate": f"{end_date}T00:00:00.000Z",
+            "area": "IT",
+            "asFreelance": True,
+            "company": company,
+            "description": description,
+            "location": {
+                "formattedAddress": location,
+                "street": None,
+                "street2": None,
+                "city": city,
+                "zipCode": "13080",
+                "administrativeAreaLevel4": None,
+                "administrativeAreaLevel4Code": None,
+                "administrativeAreaLevel3": None,
+                "administrativeAreaLevel3Code": None,
+                "administrativeAreaLevel2": "Bouches-du-Rhône",
+                "administrativeAreaLevel2Code": "13",
+                "administrativeAreaLevel1": "Provence-Alpes-Côte d'Azur",
+                "administrativeAreaLevel1Code": "93",
+                "country": "France",
+                "countryCode": "FR",
+                "region": None,
+                "loc": {
+                    "lat": 43.5283,
+                    "lon": 5.44973
+                },
+                "_links": []
             },
-            "profileCreationRequestId": response.json().get("profileCreationRequestId")
+            "startDate": f"{start_date}T00:00:00.000Z",
+            "title": title,
+            "requestOrigin": "SIGNUP"
         }
 
-        response = session.post(f"{self.url}/with-account", json=account_data, headers=headers)
-        if response.status_code != 200:
-            logger.error(f"Échec de la création du compte sur {self.nom}: {response.text}")
-            return
-
-        logger.info(f"Inscription réussie sur {self.nom}")
+        try:
+            response = requests.post(self.get_url('profile'), headers=headers, json=data)
+            response.raise_for_status()
+            logger.info(f"Profil complété sur {self.nom}")
+        except requests.exceptions.RequestException as e:
+            logger.error(f"Échec de la complétion du profil sur {self.nom}: {str(e)}")
 
     def mettre_a_jour_profil(self, profil):
         """Mettre à jour le profil sur Malt."""
@@ -139,53 +212,15 @@ class Malt(Plateforme):
         # Implémentation spécifique pour obtenir les statistiques Malt
         pass
 
-class LinkedIn(Plateforme):
-    def __init__(self):
-        super().__init__('LinkedIn', 'https://www.linkedin.com')
-
-    def get_selectors(self):
-        """Obtenir les sélecteurs pour LinkedIn."""
-        return "#email-address", "#password", "#password"
-
-    def mettre_a_jour_profil(self, profil):
-        """Mettre à jour le profil sur LinkedIn."""
-        logger.info(f"Mise à jour du profil sur {self.nom}")
-        # Implémentation spécifique pour mettre à jour le profil LinkedIn
-        pass
-
-    def obtenir_statistiques(self):
-        """Obtenir des statistiques sur LinkedIn."""
-        logger.info(f"Obtention des statistiques sur {self.nom}")
-        # Implémentation spécifique pour obtenir les statistiques LinkedIn
-        pass
-
-class Dice(Plateforme):
-    def __init__(self):
-        super().__init__('Dice', 'https://www.dice.com')
-
-    def get_selectors(self):
-        """Obtenir les sélecteurs pour Dice."""
-        return "#email", "#password", "#password"
-
-    def mettre_a_jour_profil(self, profil):
-        """Mettre à jour le profil sur Dice."""
-        logger.info(f"Mise à jour du profil sur {self.nom}")
-        # Implémentation spécifique pour mettre à jour le profil Dice
-        pass
-
-    def obtenir_statistiques(self):
-        """Obtenir des statistiques sur Dice."""
-        logger.info(f"Obtention des statistiques sur {self.nom}")
-        # Implémentation spécifique pour obtenir les statistiques Dice
-        pass
-
 class Upwork(Plateforme):
     def __init__(self):
         super().__init__('Upwork', 'https://www.upwork.com')
 
-    def get_selectors(self):
-        """Obtenir les sélecteurs pour Upwork."""
-        return "#email", "#password", "button[type='submit']"
+    def remplir_formulaire_inscription(self):
+        """Remplir le formulaire d'inscription pour Upwork."""
+        logger.info(f"Remplissage du formulaire d'inscription pour {self.nom}")
+        # Implémentation spécifique pour remplir le formulaire d'inscription Upwork
+        pass
 
     def mettre_a_jour_profil(self, profil):
         """Mettre à jour le profil sur Upwork."""
@@ -199,46 +234,34 @@ class Upwork(Plateforme):
         # Implémentation spécifique pour obtenir les statistiques Upwork
         pass
 
-class Tekkit(Plateforme):
+class Freelancer(Plateforme):
     def __init__(self):
-        super().__init__('Tekkit', 'https://www.teckit.fr')
+        super().__init__('Freelancer', 'https://www.freelancer.com')
 
-    def get_selectors(self):
-        """Obtenir les sélecteurs pour Tekkit."""
-        return "#email", "#password", "#password"
+    def remplir_formulaire_inscription(self):
+        """Remplir le formulaire d'inscription pour Freelancer."""
+        logger.info(f"Remplissage du formulaire d'inscription pour {self.nom}")
+        # Implémentation spécifique pour remplir le formulaire d'inscription Freelancer
+        pass
 
     def mettre_a_jour_profil(self, profil):
-        """Mettre à jour le profil sur Tekkit."""
+        """Mettre à jour le profil sur Freelancer."""
         logger.info(f"Mise à jour du profil sur {self.nom}")
-        # Implémentation spécifique pour mettre à jour le profil Tekkit
+        # Implémentation spécifique pour mettre à jour le profil Freelancer
         pass
 
     def obtenir_statistiques(self):
-        """Obtenir des statistiques sur Tekkit."""
+        """Obtenir des statistiques sur Freelancer."""
         logger.info(f"Obtention des statistiques sur {self.nom}")
-        # Implémentation spécifique pour obtenir les statistiques Tekkit
+        # Implémentation spécifique pour obtenir les statistiques Freelancer
         pass
 
 class GestionProfil:
     def __init__(self):
-        """
-        Initialiser la gestion des profils avec une liste de plateformes.
-        """
-        self.plateformes = [
-            Upwork(),
-            Freelancer(),
-            Guru(),
-            AngelList(),
-            LinkedIn(),
-            Dice(),
-            Malt(),
-            Tekkit()
-        ]
+        self.plateformes = [Malt(), Upwork(), Freelancer()]
 
     def creer_comptes(self):
-        """
-        Créer des comptes sur les plateformes disponibles.
-        """
+        """Créer des comptes sur les plateformes disponibles."""
         for plateforme in self.plateformes:
             try:
                 plateforme.creer_compte()
@@ -247,11 +270,7 @@ class GestionProfil:
                 logger.error(f"Échec de la création du compte sur {plateforme.nom}: {str(e)}")
 
     def mise_a_jour_profil(self, profil):
-        """
-        Mettre à jour le profil sur les plateformes disponibles.
-
-        :param profil: Dictionnaire contenant les informations du profil
-        """
+        """Mettre à jour le profil sur les plateformes disponibles."""
         for plateforme in self.plateformes:
             try:
                 plateforme.mettre_a_jour_profil(profil)
@@ -260,11 +279,7 @@ class GestionProfil:
                 logger.error(f"Échec de la mise à jour du profil sur {plateforme.nom}: {str(e)}")
 
     def obtenir_statistiques(self):
-        """
-        Obtenir des statistiques sur les plateformes disponibles.
-
-        :return: Dictionnaire contenant les statistiques de chaque plateforme
-        """
+        """Obtenir des statistiques sur les plateformes disponibles."""
         statistiques = {}
         for plateforme in self.plateformes:
             try:
@@ -291,3 +306,10 @@ if __name__ == "__main__":
     stats = gestionnaire.obtenir_statistiques()
     # Afficher les statistiques (implémentez cette méthode selon vos besoins)
     # gestionnaire.afficher_statistiques(stats)
+
+    malt = Malt()
+    cookies = malt.connexion()
+    if cookies:
+        malt.completer_profil(cookies)
+    else:
+        logger.error("Impossible de se connecter à Malt")

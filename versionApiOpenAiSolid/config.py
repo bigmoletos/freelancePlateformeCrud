@@ -37,3 +37,4 @@ FREELANCE_PASSWORD = os.getenv("FREELANCE_PASSWORD")
 if not FREELANCE_PASSWORD:
     raise ValueError(
         "Le mot de passe du freelance n'a pas été défini correctement. Veuillez vérifier le fichier .env et définir FREELANCE_PASSWORD."
+    )
