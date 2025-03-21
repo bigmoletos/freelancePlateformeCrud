@@ -1,0 +1,82 @@
+[
+    {
+        "nom": "Upwork",
+        "description": "Une des plus grandes plateformes de freelancing avec une variété de projets, y compris en IA.",
+        "url": "https://www.upwork.com",
+        "login_url": "https://www.upwork.com/login",
+        "profile_url": "https://www.upwork.com/freelancers/settings/overview",
+        "api_endpoint": "https://www.upwork.com/api/v1"
+    },
+    {
+        "nom": "Freelancer.com",
+        "description": "Plateforme mondiale avec un système d'enchères pour les projets.",
+        "url": "https://www.freelancer.com",
+        "login_url": "https://www.freelancer.com/login",
+        "profile_url": "https://www.freelancer.com/users/profile.php",
+        "api_endpoint": "https://www.freelancer.com/api/v1"
+    },
+    {
+        "nom": "Toptal",
+        "description": "Réseau exclusif pour les meilleurs freelances, idéal pour des projets IA de qualité supérieure.",
+        "url": "https://www.toptal.com",
+        "login_url": "https://www.toptal.com/login",
+        "profile_url": "https://www.toptal.com/talent/account/profile",
+        "api_endpoint": "https://www.toptal.com/api/v1"
+    },
+    {
+        "nom": "Fiverr",
+        "description": "Permet de proposer des services spécifiques sous forme de \"gigs\", adapté aux petits projets IA.",
+        "url": "https://fr.fiverr.com",
+        "login_url": "https://fr.fiverr.com/login",
+        "profile_url": "https://fr.fiverr.com/seller_dashboard/profile",
+        "api_endpoint": "https://api.fiverr.com/v1"
+    },
+    {
+        "nom": "Guru",
+        "description": "Plateforme conviviale offrant des options de collaboration et de paiement flexibles.",
+        "url": "https://www.guru.com",
+        "login_url": "https://www.guru.com/login",
+        "profile_url": "https://www.guru.com/freelancer/profile",
+        "api_endpoint": "https://api.guru.com/v1"
+    },
+    {
+        "nom": "PeoplePerHour",
+        "description": "Spécialisée dans les freelances professionnels, avec une forte communauté tech.",
+        "url": "https://www.peopleperhour.com",
+        "login_url": "https://www.peopleperhour.com/login",
+        "profile_url": "https://www.peopleperhour.com/freelancer/profile",
+        "api_endpoint": "https://api.peopleperhour.com/v1"
+    },
+    {
+        "nom": "Arc.dev",
+        "description": "Plateforme axée sur les développeurs expérimentés, avec des tests techniques et des emplois distants.",
+        "url": "https://arc.dev",
+        "login_url": "https://arc.dev/login",
+        "profile_url": "https://arc.dev/talent/profile",
+        "api_endpoint": "https://api.arc.dev/v1"
+    },
+    {
+        "nom": "Kolabtree",
+        "description": "Idéale pour les freelances scientifiques et techniques, y compris l'IA.",
+        "url": "https://www.kolabtree.com",
+        "login_url": "https://www.kolabtree.com/login",
+        "profile_url": "https://www.kolabtree.com/expert/profile",
+        "api_endpoint": "https://api.kolabtree.com/v1"
+    },
+    {
+        "nom": "Malt",
+        "description": "Plateforme européenne spécialisée dans l'informatique et le marketing, idéale pour les freelances.",
+        "url": "https://www.malt.fr",
+        "login_url": "https://www.malt.fr/login",
+        "profile_url": "https://www.malt.fr/profile/edit",
+        "api_endpoint": "https://api.malt.fr/v1"
+    },
+    {
+        "nom": "Free-Work",
+        "description": "Propose des missions freelance et des emplois dans le domaine IT, y compris l'IA.",
+        "url": "https://www.free-work.com",
+        "login_url": "https://www.free-work.com/login",
+        "profile_url": "https://www.free-work.com/freelance/profile",
+        "api_endpoint": "https://api.free-work.com/v1"
+    }
+]

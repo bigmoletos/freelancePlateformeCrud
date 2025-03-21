@@ -153,9 +153,9 @@ class Malt(Plateforme):
         city = location.split(',')[0].strip()
         start_date = experience.get("date_debut", "2023-01-24")
         end_date = experience.get("date_fin", "2024-09-17")
-        title = experience.get("intitule_poste", "intitule du poste romaru")
-        company = experience.get("nom_entreprise", "ferry")
-        description = experience.get("description", "sdssdssdsdssddssdssdssssdqqqqqqqqqqzderthhhyregthhtgfregtzvrgezrgrevrgzgregzbzefzgrthththtrgrgrrgzrgr")
+        title = experience.get("poste", "intitule du poste romaru")
+        company = experience.get("entreprise", "ferry")
+        description = experience.get("description", "veuillez mettre à jour la description")
 
         # Préparer les données pour compléter le profil
         data = {
