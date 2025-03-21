@@ -1,3 +1,16 @@
+### Script:
+### [
+###     "uv python plateforme_freelance.py"
+### ]
+### Dependencies:
+### [
+###     "python-dotenv",
+###     "requests",
+###     "mistralai",
+###     "selenium",
+###     "outils"
+### ]
+
 """
 Module principal pour la gestion des plateformes de freelancing.
 

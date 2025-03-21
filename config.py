@@ -1,3 +1,12 @@
+### Script:
+### [
+###     "uv python config.py"
+### ]
+### Dependencies:
+### [
+###     "python-dotenv"
+### ]
+
 # config.py
 from dotenv import load_dotenv
 import os

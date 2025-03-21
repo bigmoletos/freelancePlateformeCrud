@@ -1,3 +1,13 @@
+### Script:
+### [
+###     "uv python outils/config_manager.py"
+### ]
+### Dependencies:
+### [
+###     "python-dotenv",
+###     "json"
+### ]
+
 import os
 import json
 from typing import Any, Dict, Optional

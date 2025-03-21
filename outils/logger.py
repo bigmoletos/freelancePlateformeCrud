@@ -1,3 +1,13 @@
+### Script:
+### [
+###     "uv python outils/logger.py"
+### ]
+### Dependencies:
+### [
+###     "logging",
+###     "pathlib"
+### ]
+
 import logging
 import os
 from logging.handlers import RotatingFileHandler

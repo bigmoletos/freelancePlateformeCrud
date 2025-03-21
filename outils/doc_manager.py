@@ -1,3 +1,13 @@
+### Script:
+### [
+###     "uv python outils/doc_manager.py"
+### ]
+### Dependencies:
+### [
+###     "pathlib",
+###     "markdown"
+### ]
+
 import os
 import re
 from typing import List, Dict, Optional

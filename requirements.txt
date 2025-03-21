@@ -1,8 +1,24 @@
+# Dépendances principales
 python-dotenv==1.0.0
-mistralai==0.0.10
 requests==2.31.0
-python-dateutil==2.8.2
 selenium==4.16.0
-webdriver-manager==4.0.1
-pytest==7.4.3
+mistralai==0.0.10
+
+# Gestion des logs et documentation
+python-json-logger==2.0.7
+markdown==3.5.2
+
+# Tests et validation
+pytest==6.2.5
+pytest-cov==4.1.0
 pytest-selenium==4.0.0
+
+# Outils de développement
+black==23.12.1
+flake8==7.0.0
+mypy==1.8.0
+isort==5.13.2
+
+# Documentation
+sphinx==7.2.6
+sphinx-rtd-theme==2.0.0
